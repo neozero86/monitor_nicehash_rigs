@@ -16,14 +16,14 @@ class AlertEmailSender:
         logger = Logger()
 
     def send_email(self, email_content):
-        send_email_notification(self.gmail_user,
+        self.send_email_notification(self.gmail_user,
                                 self.gmail_password,
                                 self.target_email,
                                 email_content,
                                 self.email_subject)
-        logger.debug('Email sent for subject = {}, content = {}'.format(self.email_subject, email_content))
+        self.logger.debug('Email sent for subject = {}, content = {}'.format(self.email_subject, email_content))
 
-def send_email_notification(gmail_user, gmail_password, target_email, email_content, email_subject):
+def send_email_notification(self, gmail_user, gmail_password, target_email, email_content, email_subject):
     user = '{}@gmail.com'.format(gmail_user)
     context = ssl.create_default_context()
 
@@ -45,4 +45,4 @@ def send_email_notification(gmail_user, gmail_password, target_email, email_cont
         server.quit()
     except Exception as e:
         # Print any error messages 
-        print(e)       
+        self.logger.error(e)       

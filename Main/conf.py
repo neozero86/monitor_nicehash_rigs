@@ -1,18 +1,13 @@
 import json
-from singleton import Singleton
 from collections import namedtuple
 
-CONFIGURATION_FILENAME = 'Main/conf.json'
-
-def file_to_named_tuple(filename):
-    with open(filename) as data_file:
-        c_ = json.load(data_file, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-        return c_
-
-
-def load_constants():
-    c_ = file_to_named_tuple(CONFIGURATION_FILENAME)
-    return c_
+class Configuration():
+    def constants(filename = 'Main/conf.json'):
+        with open(filename) as data_file:
+            conf = json.load(data_file, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            rigs = {k[2:]: v for k ,v in conf.rigs._asdict().items()}
+            devices = {k[2:].replace("_"," "): v for k ,v in conf.devices._asdict().items()}
+            return conf, rigs, devices
 
 
-c = load_constants()
+  
