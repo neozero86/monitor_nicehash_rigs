@@ -9,6 +9,7 @@ class MonitorTest(unittest.TestCase):
     
     expected_error_set = set([
         '[id_not_active] host is down.',
+        '[id_empty] host is down.',
         '[id_accepted_speed_0] speedAccepted = 0.',
         '[id_rejected_ratio_high] rejected_ratio = 50.0%.',
         'Script error [id_invalid_profile.Invalid_card] device not recognized',

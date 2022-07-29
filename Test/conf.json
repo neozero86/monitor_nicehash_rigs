@@ -4,6 +4,7 @@
   "error_threshold": 3,
   "rigs": {
     "r_id_ok": "id_ok",
+    "r_id_empty": "id_empty",
     "r_id_not_active": "id_not_active",
     "r_id_accepted_speed_0": "id_accepted_speed_0",
     "r_id_rejected_ratio_high": "id_rejected_ratio_high",
