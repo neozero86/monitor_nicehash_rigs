@@ -71,16 +71,13 @@ class Rig():
             self.problem = sorted(errors, key=lambda x: x.severity(), reverse=True)[0]
             self.operation_status = Error()
             self.solutions = self.problem.solutions()
-            print("reiniciando problema")
 
         self.operation_status.update()
         return errors
 
     def solve_errors(self, api, email_sender, logger):
         if (self.problem != None and not self.operation_status.should_wait()):
-            print(self.solutions)
             solution = self.solutions.pop(0)
-            print(self.solutions)
             solution.solve(api, self.id, email_sender, self.problem, logger)
             self.operation_status = solution.next_status()
         if(self.problem == None and not self.operation_status.is_ok()):
