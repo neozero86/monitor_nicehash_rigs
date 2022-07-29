@@ -42,10 +42,11 @@ def check_status(rig_name, rig_id):
 	if (accepted==0):
 		EMAIL_SENDER.send_email(email_content='[{}] speedAccepted = 0. Please check.'.format(
                             rig_name))
-	rejected_ratio = rejected/(accepted+rejected)
-	if (rejected_ratio>c.max_rejected_ratio):
-		EMAIL_SENDER.send_email(email_content='[{}] rejected_ratio = {}%. Please check.'.format(
-                            rig_name,rejected_ratio*100))
+	else:	
+		rejected_ratio = rejected/(accepted+rejected)
+		if (rejected_ratio>c.max_rejected_ratio):
+			EMAIL_SENDER.send_email(email_content='[{}] rejected_ratio = {}%. Please check.'.format(
+	                            rig_name,rejected_ratio*100))
 	return True
 
 def check_details(rig_name, rig_id):
@@ -55,6 +56,7 @@ def check_details(rig_name, rig_id):
 	if (status != "MINING"):
 		EMAIL_SENDER.send_email(email_content='[{}] host is down. Please check.'.format(
                     rig_name))
+		return False
 	for device in details["devices"]:
 		name = device["name"]
 		found = False
@@ -67,7 +69,7 @@ def check_details(rig_name, rig_id):
 		if (not found):
 			logger.error('Script error [{}.{}] device not recognized'.format(rig_name, name))
 			EMAIL_SENDER.send_email(email_content='Script error [{}.{}] device not recognized'.format(rig_name, name))
-
+	return True
 
 def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed):
 	name= device["name"]
@@ -79,6 +81,7 @@ def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed):
 	if(status != "MINING"):
 		EMAIL_SENDER.send_email(email_content='[{}.{}] current status is {}. Please check.'.format(
 		                            rig_name, name, status))
+		return False
 	if(power>max_power):
 		EMAIL_SENDER.send_email(email_content='[{}.{}] current power usage: {} exceed max power {}. Please check.'.format(
 		                            rig_name, name, power, max_power))

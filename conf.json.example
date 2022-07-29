@@ -12,7 +12,7 @@
     "d_3090": {
       "max_power":350.0,
       "max_tem":68.0,
-      "min_hr":105.0,
+      "min_hr":107.0,
       "min_fan_speed":10.0
     },
     "d_3060_Ti": {
