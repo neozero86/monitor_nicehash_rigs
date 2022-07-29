@@ -1,4 +1,7 @@
 from Main.device import Device
+from Main.problem.high_rejected_ratio import HighRejectedRatio
+from Main.problem.host_down import HostDown
+from Main.problem.null_accepted_speed import NullAcceptedSpeed
 from Main.status import Status
 
 class Rig():
@@ -39,12 +42,12 @@ class Rig():
     def check(self):
         errors = []
         if(not self.status.value):
-            errors.append('[{}] host is down.'.format(self.name))
+            errors.append(HostDown(self.name))
             return errors
         if (self.speed_accepted == 0): 
-            errors.append('[{}] speedAccepted = 0.'.format(self.name))
+            errors.append(NullAcceptedSpeed(self.name))
         elif (self.rejected_ratio > self.max_rejected_ratio):
-            errors.append('[{}] rejected_ratio = {}%.'.format(self.name,self.rejected_ratio*100))
+            errors.append(HighRejectedRatio(self.name,self.rejected_ratio))
         for device in self.devices.values():
             errors.extend(device.check())
         return errors

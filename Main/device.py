@@ -1,3 +1,8 @@
+from Main.problem.metric_exceeded_inferior_limit import MetricExceededInferiorLimit
+from Main.problem.metric_exceeded_superior_limit import MetricExceededSuperiorLimit
+from Main.problem.no_vram import NoVram
+from Main.problem.script_error import ScriptError
+from Main.problem.wrong_status import WrongStatus
 from Main.status import Status
 
 class Device():
@@ -38,24 +43,24 @@ class Device():
     def check(self):
         errors=[]
         if (not self.thresholds):
-            errors.append('Script error [{}.{}] device not recognized'.format(self.rig.name, self.name))
+            errors.append(ScriptError(self.rig.name, 'device [{}] not recognized'.format(self.name)))
             return errors
         if(not self.status.value):
-            errors.append('[{}.{}.{}] current status is {}.'.format(self.rig.name, self.name, self.id, self.status.name), errors)
+            errors.append(WrongStatus(self.rig.name, self.name, self.id, self.status.name))
         if(self.vram_temp==-1):
-            errors.append('[{}.{}.{}] no vram metric'.format(self.rig.name, self.name, self.id))
+            errors.append(NoVram(self.rig.name, self.name, self.id))
         elif(self.vram_temp>self.thresholds.max_vram_temp):
-            errors.append('[{}.{}.{}] current vram temp: {} exceed max vram temp {}.'.format(self.rig.name, self.name, self.id, self.vram_temp, self.thresholds.max_vram_temp))
+            errors.append(MetricExceededSuperiorLimit(self.rig.name, self.name, self.id, "vram_temp", self.vram_temp, self.thresholds.max_vram_temp))
         if(self.power>self.thresholds.max_power):
-            errors.append('[{}.{}.{}] current power usage: {} exceed max power {}.'.format(self.rig.name, self.name, self.id, self.power, self.thresholds.max_power))
+            errors.append(MetricExceededSuperiorLimit(self.rig.name, self.name, self.id, "power", self.power, self.thresholds.max_power))
         if(self.temp_encoded<0):
-            errors.append('[{}.{}.{}] negative current core temp: {}.'.format(self.rig.name, self.name, self.id, self.temp_encoded))
+            errors.append(MetricExceededInferiorLimit(self.rig.name, self.name, self.id, "core temp", self.temp_encoded, 0))
         elif(self.core_temp>self.thresholds.max_core_temp):
-            errors.append('[{}.{}.{}] current core temp: {} exceed max core temp {}.'.format(self.rig.name, self.name, self.id, self.core_temp, self.thresholds.max_core_temp))
+            errors.append(MetricExceededSuperiorLimit(self.rig.name, self.name, self.id, "core temp", self.core_temp, self.thresholds.max_core_temp))
         if(self.hr<self.thresholds.min_hr):
-            errors.append('[{}.{}.{}] current hash rate: {} lower than min hash rate {}.'.format(self.rig.name, self.name, self.id, self.hr, self.thresholds.min_hr))
+            errors.append(MetricExceededInferiorLimit(self.rig.name, self.name, self.id, "hash rate", self.hr, self.thresholds.min_hr))
         if(self.fan_speed<self.thresholds.min_fan_speed):
-            errors.append('[{}.{}.{}] current fan speed: {} lower than min fan speed {}.'.format(self.rig.name, self.name, self.id, self.fan_speed, self.thresholds.min_fan_speed))
+            errors.append(MetricExceededInferiorLimit(self.rig.name, self.name, self.id, "fan speed", self.fan_speed, self.thresholds.min_fan_speed))
         return errors    
 
 

@@ -1,4 +1,4 @@
-
+from Main.problem.problem import Problem
 
 class ScriptError(Problem):
     def __init__(self, rig_name, exception):

@@ -1,4 +1,4 @@
-
+from Main.problem.problem import Problem
 
 class UnrecognizedDevice(Problem):
     def __init__(self, rig_name, device_name):

@@ -1,4 +1,5 @@
 from time import sleep
+from Main.problem.script_error import ScriptError
 
 from Main.rig import Rig
 
@@ -24,13 +25,13 @@ class Monitor():
                         self.update_details(rig)
                     errors.extend(rig.check())
                 except Exception as e:
-                    self.error('Rig: {}; Script error [{}]'.format(rig.name, str(e)), errors, True)
+                    errors.append(ScriptError(rig.name, e))
             if (errors):
                 error_count += 1
             else:
                 error_count = 0
             for error in errors:
-                self.logger.error(error)
+                self.logger.error(str(error))
             self.logger.info('accumulated errors: {}'.format(error_count))
             self.logger.info('Going to sleep for {} seconds.'.format(self.polling_interval_sec))
             self.send_email_threshold_reached(errors, self.error_threshold, error_count)
@@ -53,13 +54,7 @@ class Monitor():
         self.logger.debug(details)
         rig.update_details(details, self.devices)
      
-    def error(self, message, errors, send_email=False):
-        self.logger.error(message)
-        errors.append(message)
-        if (send_email):
-            self.email_sender.send_email(email_content=message)
-
     def send_email_threshold_reached(self, errors, error_threshold, error_count):
         if (error_count>=error_threshold):
             self.logger.error('error_count: {}, sending email'.format(error_count))
-            self.email_sender.send_email(email_content='\n'.join(errors))
+            self.email_sender.send_email(email_content='\n'.join([str(e) for e in errors]))
