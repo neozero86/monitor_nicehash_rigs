@@ -8,7 +8,7 @@ class Monitor():
         self.logger = logger
         self.api = api
         self.email_sender = email_sender
-        self.rigs = [Rig(v,k, max_rejected_ratio) for k,v in rigs.items()]
+        self.rigs = [Rig(v,k, max_rejected_ratio, error_threshold) for k,v in rigs.items()]
         self.devices = devices
         self.error_threshold = error_threshold
         self.polling_interval_sec = polling_interval_sec

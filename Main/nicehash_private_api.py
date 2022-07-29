@@ -1,5 +1,5 @@
 from datetime import datetime
-from time import mktime
+from time import mktime, sleep
 import uuid
 import hmac
 import requests
@@ -19,7 +19,28 @@ class NicehashPrivateApi():
         return self.__request('GET', '/main/api/v2/mining/algo/stats', 'rigId=' + rig_id, None)
 
     def get_my_rig_details(self, rig_id):
-        return self.__request('GET', '/main/api/v2/mining/rig2/'+ rig_id,'', None) #temp  % 65536
+        return self.__request('GET', '/main/api/v2/mining/rig2/'+ rig_id,'', None)
+
+    def restart_rig(self, rig_id):
+        return self.__do_action(rig_id, 'RESTART')
+
+    def stop_rig(self, rig_id):
+        return self.__do_action(rig_id, 'STOP')
+    
+    def start_rig(self, rig_id):
+        return self.__do_action(rig_id, 'START')
+
+    def restart_worker(self, rig_id):
+        self.stop_rig(rig_id)
+        sleep(10)
+        self.start_rig(rig_id)
+
+    def __do_action(self, rig_id, action):
+        action_info = {
+            "rigId": rig_id,
+            "action": action
+        }
+        return self.__request('POST', '/main/api/v2/mining/rigs/status2/'+ rig_id,'', action_info)
 
     def __request(self, method, path, query, body):
 

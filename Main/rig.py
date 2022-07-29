@@ -5,13 +5,16 @@ from Main.problem.null_accepted_speed import NullAcceptedSpeed
 from Main.status import Status
 
 class Rig():
-    def __init__(self, id, name, max_rejected_ratio, algorithm="DAGGERHASHIMOTO"):
+    def __init__(self, id, name, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
         self.id = id
         self.name = name
         self.max_rejected_ratio = max_rejected_ratio
         self.devices = {}
         self.algorithm = algorithm
         self.status = Status.ACTIVE
+        self.error_threshold = error_threshold
+        self.error_count = 0
+        self.problems = []
 
     def update(self, status):
         status = status["algorithms"]
@@ -43,13 +46,20 @@ class Rig():
         errors = []
         if(not self.status.value):
             errors.append(HostDown(self.name))
-            return errors
-        if (self.speed_accepted == 0): 
-            errors.append(NullAcceptedSpeed(self.name))
-        elif (self.rejected_ratio > self.max_rejected_ratio):
-            errors.append(HighRejectedRatio(self.name,self.rejected_ratio))
-        for device in self.devices.values():
-            errors.extend(device.check())
+        else:
+            if (self.speed_accepted == 0): 
+                errors.append(NullAcceptedSpeed(self.name))
+            elif (self.rejected_ratio > self.max_rejected_ratio):
+                errors.append(HighRejectedRatio(self.name,self.rejected_ratio))
+            for device in self.devices.values():
+                errors.extend(device.check())
+        if (errors):
+            self.error_count += 1
+        else:
+            self.error_count = 0
+        if (self.error_count > self.error_threshold):
+            self.problems = errors
+
         return errors
 
     def set_thresholds(self, device_stats):
