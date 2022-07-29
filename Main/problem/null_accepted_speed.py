@@ -1,0 +1,5 @@
+
+
+class NullAcceptedSpeed(Problem):
+    def __init__(self, rig_name):
+        super(NullAcceptedSpeed, self).__init__('[{}] speedAccepted = 0.'.format(rig_name))

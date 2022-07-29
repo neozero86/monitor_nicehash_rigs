@@ -1,11 +1,11 @@
-from conf import logger
+from Main.logger import Logger
 import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-smtp_server = "smtp.gmail.com" # for Gmail
-port = 587  # For starttls
+smtp_server = "smtp.gmail.com"
+port = 587
 
 class AlertEmailSender:
     def __init__(self, gmail_user, gmail_password, target_email, email_subject):
@@ -13,6 +13,7 @@ class AlertEmailSender:
         self.gmail_password = gmail_password
         self.target_email = target_email
         self.email_subject = email_subject
+        logger = Logger()
 
     def send_email(self, email_content):
         send_email_notification(self.gmail_user,
@@ -41,9 +42,7 @@ def send_email_notification(gmail_user, gmail_password, target_email, email_cont
 
         # Send email here
         server.sendmail(user, target_email, msg.as_string())
-
+        server.quit()
     except Exception as e:
         # Print any error messages 
-        print(e)
-    finally:
-        server.quit()
+        print(e)       
