@@ -15,47 +15,49 @@ RIGS = {k[2:]: v for k ,v in c.rigs._asdict().items()}
 DEVICES = {k[2:].replace("_"," "): v for k ,v in c.devices._asdict().items()}
 
 def monitor():
-	print(DEVICES)
+	error_count = 0
 	while True:
+		errors = []
 		try:
 			for rig_name,rig_id in RIGS.items():
 				logger.info(rig_name)
-				if (check_status(rig_name, rig_id)):
-					check_details(rig_name, rig_id)
+				if (check_status(rig_name, rig_id, errors)):
+					check_details(rig_name, rig_id, errors)
 		except Exception as e:
-			logger.error(e)
-			EMAIL_SENDER.send_email(email_content='Script error [{}]'.format(str(e)))
-		logger.debug('Going to sleep for {} seconds.'.format(c.polling_interval_sec))
+			error('Script error [{}]'.format(str(e)), errors, True)
+		if (errors):
+			error_count += 1
+		else:
+			error_count = 0
+
+		logger.info('accumulated errors: {}'.format(error_count))
+		logger.info('Going to sleep for {} seconds.'.format(c.polling_interval_sec))
+		send_email_threshold_reached(errors, c.error_threshold, error_count)
 		sleep(c.polling_interval_sec)
 
-def check_status(rig_name, rig_id):
+def check_status(rig_name, rig_id, errors):
 	status = PRIVATE_API.get_my_rig_stats(rig_id)
 	logger.info(status)
 	status = status["algorithms"]["DAGGERHASHIMOTO"]
 	if (not status["isActive"]):
-		EMAIL_SENDER.send_email(email_content='[{}] host is disabled. Please check.'.format(
-                            rig_name))
-		logger.error('[{}] host is disabled'.format(rig_name))
+		error('[{}] host is disabled. Please check.'.format(rig_name), errors)
 		return False
 	accepted=status["speedAccepted"]
 	rejected=status["speedRejected"]
 	if (accepted==0):
-		EMAIL_SENDER.send_email(email_content='[{}] speedAccepted = 0. Please check.'.format(
-                            rig_name))
+		error('[{}] speedAccepted = 0. Please check.'.format(rig_name), errors)
 	else:	
 		rejected_ratio = rejected/(accepted+rejected)
 		if (rejected_ratio>c.max_rejected_ratio):
-			EMAIL_SENDER.send_email(email_content='[{}] rejected_ratio = {}%. Please check.'.format(
-	                            rig_name,rejected_ratio*100))
+			error('[{}] rejected_ratio = {}%. Please check.'.format(rig_name,rejected_ratio*100), errors)
 	return True
 
-def check_details(rig_name, rig_id):
+def check_details(rig_name, rig_id, errors):
 	details = PRIVATE_API.get_my_rig_details(rig_id)
 	logger.debug(details)
 	status = details["minerStatus"]
 	if (status != "MINING"):
-		EMAIL_SENDER.send_email(email_content='[{}] host is down. Please check.'.format(
-                    rig_name))
+		error('[{}] host is down. Please check.'.format(rig_name), errors)
 		return False
 	for device in details["devices"]:
 		name = device["name"]
@@ -63,15 +65,14 @@ def check_details(rig_name, rig_id):
 		for dev_id, values in DEVICES.items():
 			if (dev_id in name):
 				logger.debug('profile: {} for {}'.format(dev_id, name))
-				check(rig_name, device, values.max_power, values.max_tem, values.min_hr, values.min_fan_speed)
+				check(rig_name, device, values.max_power, values.max_tem, values.min_hr, values.min_fan_speed, errors)
 				found = True
 				break
 		if (not found):
-			logger.error('Script error [{}.{}] device not recognized'.format(rig_name, name))
-			EMAIL_SENDER.send_email(email_content='Script error [{}.{}] device not recognized'.format(rig_name, name))
+			error('Script error [{}.{}] device not recognized'.format(rig_name, name), errors, True)
 	return True
 
-def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed):
+def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed, errors):
 	name= device["name"]
 	power = device["powerUsage"]
 	temp = device["temperature"]%65536
@@ -79,21 +80,26 @@ def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed):
 	fan_speed = device["revolutionsPerMinutePercentage"]
 	status = device["status"]["enumName"]
 	if(status != "MINING"):
-		EMAIL_SENDER.send_email(email_content='[{}.{}] current status is {}. Please check.'.format(
-		                            rig_name, name, status))
+		error('[{}.{}] current status is {}. Please check.'.format(rig_name, name, status), errors)
 		return False
 	if(power>max_power):
-		EMAIL_SENDER.send_email(email_content='[{}.{}] current power usage: {} exceed max power {}. Please check.'.format(
-		                            rig_name, name, power, max_power))
+		error('[{}.{}] current power usage: {} exceed max power {}. Please check.'.format(rig_name, name, power, max_power), errors)
 	if(temp>max_tem):
-		EMAIL_SENDER.send_email(email_content='[{}.{}] current temp: {} exceed max temp {}. Please check.'.format(
-	                            rig_name, name, temp, max_tem))
+		error('[{}.{}] current temp: {} exceed max temp {}. Please check.'.format(rig_name, name, temp, max_tem), errors)
 	if(hr<min_hr):
-		EMAIL_SENDER.send_email(email_content='[{}.{}] current hash rate: {} lower than min hash rate {}. Please check.'.format(
-	                            rig_name, name, hr, min_hr))
+		error('[{}.{}] current hash rate: {} lower than min hash rate {}. Please check.'.format(rig_name, name, hr, min_hr), errors)
 	if(fan_speed<min_fan_speed):
-		EMAIL_SENDER.send_email(email_content='[{}.{}] current fan speed: {} lower than min fan speed {}. Please check.'.format(
-	                            rig_name, name, fan_speed, min_fan_speed))
+		error('[{}.{}] current fan speed: {} lower than min fan speed {}. Please check.'.format(rig_name, name, fan_speed, min_fan_speed), errors)
 
+def error(message, errors, send_email=False):
+	logger.error(message)
+	errors.append(message)
+	if (send_email):
+		EMAIL_SENDER.send_email(email_content=message)
+
+def send_email_threshold_reached(errors, error_threshold, error_count):
+	if (error_count>=error_threshold):
+		logger.error('error_count: {}, sending email'.format(error_count))
+		EMAIL_SENDER.send_email(email_content='\n'.join(errors))
 if __name__ == '__main__':
     monitor()

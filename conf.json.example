@@ -1,6 +1,7 @@
 {
   "polling_interval_sec": 60, 
   "max_rejected_ratio": 0.1,
+  "error_threshold": 3,
   "organisation_id": "NICEHASH_ORG_ID",
   "key": "NICEHASH_API_KEY",
   "secret": "NICEHASH_API_SECRET" ,
