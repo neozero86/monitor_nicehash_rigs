@@ -1,0 +1,37 @@
+{
+  "polling_interval_sec": 60, 
+  "max_rejected_ratio": 0.1,
+  "organisation_id": "NICEHASH_ORG_ID",
+  "key": "NICEHASH_API_KEY",
+  "secret": "NICEHASH_API_SECRET" ,
+  "rigs": {
+    "r_NOMBRE_RIG_1": "ID_RIG_1",
+    "r_NOMBRE_RIG_2": "ID_RIG_2"
+  },
+  "devices":{
+    "d_3090": {
+      "max_power":350.0,
+      "max_tem":68.0,
+      "min_hr":105.0,
+      "min_fan_speed":10.0
+    },
+    "d_3060_Ti": {
+      "max_power":160.0,
+      "max_tem":68.0,
+      "min_hr":54.0,
+      "min_fan_speed":10.0
+    },
+    "d_3060": {
+      "max_power":130.0,
+      "max_tem":68.0,
+      "min_hr":43.0,
+      "min_fan_speed":10.0
+    }
+  },
+  "mail": {
+    "gmail_username": "USERNAME",
+    "gmail_password": "API_GENERATED_PASS",
+    "notification_email": ["RECIEVER_USER_NAME@gmail.com"],
+    "email_subject": "[URGENT] NICEHASH"
+  }
+}
