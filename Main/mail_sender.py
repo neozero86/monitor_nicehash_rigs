@@ -4,8 +4,8 @@ import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-smtp_server = "smtp.gmail.com"
-port = 587
+SMTP_SERVER = "smtp.gmail.com"
+PORT = 587
 
 class AlertEmailSender:
     def __init__(self, gmail_user, gmail_password, target_email, email_subject):
@@ -13,7 +13,7 @@ class AlertEmailSender:
         self.gmail_password = gmail_password
         self.target_email = target_email
         self.email_subject = email_subject
-        logger = Logger()
+        self.logger = Logger()
 
     def send_email(self, email_content):
         self.send_email_notification(self.gmail_user,
@@ -34,7 +34,7 @@ def send_email_notification(self, gmail_user, gmail_password, target_email, emai
     msg.attach(MIMEText(email_content, 'plain'))
 
     try:
-        server = smtplib.SMTP(smtp_server, port)
+        server = smtplib.SMTP(SMTP_SERVER, PORT)
         server.ehlo()  # check connection
         server.starttls(context=context)  # Secure the connection
         server.ehlo()  # check connection
