@@ -3,6 +3,10 @@ from Main.problem.high_rejected_ratio import HighRejectedRatio
 from Main.problem.host_down import HostDown
 from Main.problem.null_accepted_speed import NullAcceptedSpeed
 from Main.status import Status
+from Main.strategy.down import Down
+from Main.strategy.error import Error
+from Main.strategy.normal import Normal
+import heapq
 
 class Rig():
     def __init__(self, id, name, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
@@ -14,7 +18,10 @@ class Rig():
         self.status = Status.ACTIVE
         self.error_threshold = error_threshold
         self.error_count = 0
-        self.problems = []
+        self.total_error_count = 0
+        self.problem = None
+        self.operation_status = Normal()
+        self.solutions = None
 
     def update(self, status):
         status = status["algorithms"]
@@ -55,12 +62,30 @@ class Rig():
                 errors.extend(device.check())
         if (errors):
             self.error_count += 1
+            self.total_error_count += 1
         else:
             self.error_count = 0
-        if (self.error_count > self.error_threshold):
-            self.problems = errors
+            self.problem = None
 
+        if (self.error_count > self.error_threshold and not self.operation_status.should_wait()):
+            self.problem = sorted(errors, key=lambda x: x.severity(), reverse=True)[0]
+            self.operation_status = Error()
+            self.solutions = self.problem.solutions()
+            print("reiniciando problema")
+
+        self.operation_status.update()
         return errors
+
+    def solve_errors(self, api, email_sender, logger):
+        if (self.problem != None and not self.operation_status.should_wait()):
+            print(self.solutions)
+            solution = self.solutions.pop(0)
+            print(self.solutions)
+            solution.solve(api, self.id, email_sender, self.problem, logger)
+            self.operation_status = solution.next_status()
+        if(self.problem == None and not self.operation_status.is_ok()):
+            self.operation_status = Normal()
+            email_sender.send_email(email_content='rig:{} NORMALIZED'.format(self.name))
 
     def set_thresholds(self, device_stats):
         for device in self.devices.values():

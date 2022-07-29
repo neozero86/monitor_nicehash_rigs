@@ -40,7 +40,7 @@ class NicehashPrivateApi():
             "rigId": rig_id,
             "action": action
         }
-        return self.__request('POST', '/main/api/v2/mining/rigs/status2/'+ rig_id,'', action_info)
+        return self.__request('POST', '/main/api/v2/mining/rigs/status2/','', action_info)
 
     def __request(self, method, path, query, body):
 

@@ -6,3 +6,6 @@ class MetricExceeded(Problem):
 
     def sign_message(self):
         pass
+
+    def severity(self):
+        return 4

@@ -12,7 +12,7 @@ def main():
                                     conf.mail.gmail_password,
                                     conf.mail.notification_email,
                                     conf.mail.email_subject)
-									
+			
 	monitor = Monitor(logger, api, email_sender, rigs, devices, conf.error_threshold, conf.max_rejected_ratio, conf.polling_interval_sec)
 	monitor.run()
 if __name__ == '__main__':
