@@ -40,16 +40,16 @@ def check_status(rig_name, rig_id, errors):
 	logger.info(status)
 	status = status["algorithms"]["DAGGERHASHIMOTO"]
 	if (not status["isActive"]):
-		error('[{}] host is disabled. Please check.'.format(rig_name), errors)
+		error('[{}] host is disabled.'.format(rig_name), errors)
 		return False
 	accepted=status["speedAccepted"]
 	rejected=status["speedRejected"]
 	if (accepted==0):
-		error('[{}] speedAccepted = 0. Please check.'.format(rig_name), errors)
+		error('[{}] speedAccepted = 0.'.format(rig_name), errors)
 	else:	
 		rejected_ratio = rejected/(accepted+rejected)
 		if (rejected_ratio>c.max_rejected_ratio):
-			error('[{}] rejected_ratio = {}%. Please check.'.format(rig_name,rejected_ratio*100), errors)
+			error('[{}] rejected_ratio = {}%.'.format(rig_name,rejected_ratio*100), errors)
 	return True
 
 def check_details(rig_name, rig_id, errors):
@@ -57,7 +57,7 @@ def check_details(rig_name, rig_id, errors):
 	logger.debug(details)
 	status = details["minerStatus"]
 	if (status != "MINING"):
-		error('[{}] host is down. Please check.'.format(rig_name), errors)
+		error('[{}] host is down.'.format(rig_name), errors)
 		return False
 	for device in details["devices"]:
 		name = device["name"]
@@ -80,16 +80,16 @@ def check(rig_name, device, max_power, max_tem, min_hr, min_fan_speed, errors):
 	fan_speed = device["revolutionsPerMinutePercentage"]
 	status = device["status"]["enumName"]
 	if(status != "MINING"):
-		error('[{}.{}] current status is {}. Please check.'.format(rig_name, name, status), errors)
+		error('[{}.{}] current status is {}.'.format(rig_name, name, status), errors)
 		return False
 	if(power>max_power):
-		error('[{}.{}] current power usage: {} exceed max power {}. Please check.'.format(rig_name, name, power, max_power), errors)
+		error('[{}.{}] current power usage: {} exceed max power {}.'.format(rig_name, name, power, max_power), errors)
 	if(temp>max_tem):
-		error('[{}.{}] current temp: {} exceed max temp {}. Please check.'.format(rig_name, name, temp, max_tem), errors)
+		error('[{}.{}] current temp: {} exceed max temp {}.'.format(rig_name, name, temp, max_tem), errors)
 	if(hr<min_hr):
-		error('[{}.{}] current hash rate: {} lower than min hash rate {}. Please check.'.format(rig_name, name, hr, min_hr), errors)
+		error('[{}.{}] current hash rate: {} lower than min hash rate {}.'.format(rig_name, name, hr, min_hr), errors)
 	if(fan_speed<min_fan_speed):
-		error('[{}.{}] current fan speed: {} lower than min fan speed {}. Please check.'.format(rig_name, name, fan_speed, min_fan_speed), errors)
+		error('[{}.{}] current fan speed: {} lower than min fan speed {}.'.format(rig_name, name, fan_speed, min_fan_speed), errors)
 
 def error(message, errors, send_email=False):
 	logger.error(message)
