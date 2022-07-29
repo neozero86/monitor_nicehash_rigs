@@ -15,6 +15,7 @@ class Rig():
         if (self.algorithm not in status or not status[self.algorithm]["isActive"]):
             self.status = Status.INACTIVE
             return False
+        self.status = Status.ACTIVE
         status = status[self.algorithm]
         self.speed_accepted=status["speedAccepted"]
         self.speed_rejected=status["speedRejected"]
@@ -23,7 +24,7 @@ class Rig():
         else:
             self.rejected_ratio = 1
 
-    def update_details(self, actual_info, device_stats, errors):
+    def update_details(self, actual_info, device_stats):
         self.status = Status[actual_info["minerStatus"]]
         if(not self.status.value):
             return False
@@ -31,20 +32,22 @@ class Rig():
             id = device_actual_info["id"]
             if (id not in self.devices):
                 self.devices[id] = Device(id, device_actual_info["name"], self, Status[device_actual_info["status"]["enumName"]])
-            self.devices[id].update(device_actual_info, errors)
+            self.devices[id].update(device_actual_info)
         self.set_thresholds(device_stats)
         return True
 
-    def check(self, errors):
+    def check(self):
+        errors = []
         if(not self.status.value):
             errors.append('[{}] host is down.'.format(self.name))
-            return None
+            return errors
         if (self.speed_accepted == 0): 
             errors.append('[{}] speedAccepted = 0.'.format(self.name))
         elif (self.rejected_ratio > self.max_rejected_ratio):
             errors.append('[{}] rejected_ratio = {}%.'.format(self.name,self.rejected_ratio*100))
         for device in self.devices.values():
-            device.check(errors)
+            errors.extend(device.check())
+        return errors
 
     def set_thresholds(self, device_stats):
         for device in self.devices.values():

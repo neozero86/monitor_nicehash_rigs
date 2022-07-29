@@ -21,8 +21,8 @@ class Monitor():
                 try:
                     self.logger.info(rig.name)
                     if (self.update_status(rig)):
-                        self.update_details(rig, errors)
-                    rig.check(errors)
+                        self.update_details(rig)
+                    errors.extend(rig.check())
                 except Exception as e:
                     self.error('Rig: {}; Script error [{}]'.format(rig.name, str(e)), errors, True)
             if (errors):
@@ -48,10 +48,10 @@ class Monitor():
         rig.update(status)
         return rig.status.value        
 
-    def update_details(self, rig, errors):
+    def update_details(self, rig):
         details = self.api.get_my_rig_details(rig.id)
         self.logger.debug(details)
-        rig.update_details(details, self.devices, errors)
+        rig.update_details(details, self.devices)
      
     def error(self, message, errors, send_email=False):
         self.logger.error(message)

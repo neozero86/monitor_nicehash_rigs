@@ -20,7 +20,7 @@ class Device():
                 self.thresholds = values
                 break
 
-    def update(self, actual_info, errors):
+    def update(self, actual_info):
         self.power = actual_info["powerUsage"]
         self.hr = float(actual_info["speeds"][0]["speed"])
         self.fan_speed = actual_info["revolutionsPerMinutePercentage"]
@@ -31,18 +31,20 @@ class Device():
         nhqm = [i for i in nhqm if "=" in i]
         nhqm = {measure.split("=")[0]: measure.split("=")[1] for measure in nhqm}
         if ("MT" not in nhqm):
-            errors.append('[{}.{}.{}] no vram metric'.format(self.rig.name, self.name, self.id))
-            self.vram_temp = 0
+            self.vram_temp = -1
         else:
             self.vram_temp = int(nhqm["MT"])-128	
 
-    def check(self, errors):
+    def check(self):
+        errors=[]
         if (not self.thresholds):
             errors.append('Script error [{}.{}] device not recognized'.format(self.rig.name, self.name))
-            return False
+            return errors
         if(not self.status.value):
             errors.append('[{}.{}.{}] current status is {}.'.format(self.rig.name, self.name, self.id, self.status.name), errors)
-        if(self.vram_temp>self.thresholds.max_vram_temp):
+        if(self.vram_temp==-1):
+            errors.append('[{}.{}.{}] no vram metric'.format(self.rig.name, self.name, self.id))
+        elif(self.vram_temp>self.thresholds.max_vram_temp):
             errors.append('[{}.{}.{}] current vram temp: {} exceed max vram temp {}.'.format(self.rig.name, self.name, self.id, self.vram_temp, self.thresholds.max_vram_temp))
         if(self.power>self.thresholds.max_power):
             errors.append('[{}.{}.{}] current power usage: {} exceed max power {}.'.format(self.rig.name, self.name, self.id, self.power, self.thresholds.max_power))
@@ -54,6 +56,7 @@ class Device():
             errors.append('[{}.{}.{}] current hash rate: {} lower than min hash rate {}.'.format(self.rig.name, self.name, self.id, self.hr, self.thresholds.min_hr))
         if(self.fan_speed<self.thresholds.min_fan_speed):
             errors.append('[{}.{}.{}] current fan speed: {} lower than min fan speed {}.'.format(self.rig.name, self.name, self.id, self.fan_speed, self.thresholds.min_fan_speed))
+        return errors    
 
 
     def __str__(self):

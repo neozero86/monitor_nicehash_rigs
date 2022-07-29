@@ -5,6 +5,8 @@ class Status(Enum):
     MINING = True
     INACTIVE = False
     STOPPED = False
+    OFFLINE = False
+    ERROR = False
     
     @staticmethod
     def from_str(text):
