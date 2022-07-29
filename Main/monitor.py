@@ -1,7 +1,7 @@
 from time import sleep
 
 class Monitor():
-	def __init__(self, logger, api, email_sender, rigs, devices, error_threshold, max_rejected_ratio, polling_interval_sec):
+	def __init__(self, logger, api, email_sender, rigs, devices, error_threshold, max_rejected_ratio, polling_interval_sec, iterations = -1):
 		self.logger = logger
 		self.api = api
 		self.email_sender = email_sender
@@ -10,6 +10,7 @@ class Monitor():
 		self.error_threshold = error_threshold
 		self.max_rejected_ratio = max_rejected_ratio
 		self.polling_interval_sec = polling_interval_sec
+		self.iterations = iterations
 
 	def run(self):
 		error_count = 0
@@ -30,6 +31,12 @@ class Monitor():
 			self.logger.info('accumulated errors: {}'.format(error_count))
 			self.logger.info('Going to sleep for {} seconds.'.format(self.polling_interval_sec))
 			self.send_email_threshold_reached(errors, self.error_threshold, error_count)
+			
+			if (self.iterations != -1):
+				self.iterations -= 1
+				if (self.iterations == 0):
+					break
+				
 			sleep(self.polling_interval_sec)
 
 	def check_status(self, rig_name, rig_id, errors):
@@ -71,20 +78,21 @@ class Monitor():
 
 	def check(self, rig_name, device, max_power, max_tem, min_hr, min_fan_speed, errors):
 		name= device["name"]
+		device_id= device["id"]
 		power = device["powerUsage"]
 		temp = device["temperature"]%65536
 		hr = float(device["speeds"][0]["speed"])
 		fan_speed = device["revolutionsPerMinutePercentage"]
 		status = device["status"]["enumName"]
 		if(status != "MINING"):
-			self.error('[{}.{}] current status is {}.'.format(rig_name, name, status), errors)
+			self.error('[{}.{}.{}] current status is {}.'.format(rig_name, name, device_id, status), errors)
 			return False
 		if(power>max_power):
-			self.error('[{}.{}] current power usage: {} exceed max power {}.'.format(rig_name, name, power, max_power), errors)
+			self.error('[{}.{}.{}] current power usage: {} exceed max power {}.'.format(rig_name, name, device_id, power, max_power), errors)
 		if(temp>max_tem):
-			self.error('[{}.{}] current temp: {} exceed max temp {}.'.format(rig_name, name, temp, max_tem), errors)
+			self.error('[{}.{}.{}] current temp: {} exceed max temp {}.'.format(rig_name, name, device_id, temp, max_tem), errors)
 		if(hr<min_hr):
-			self.error('[{}.{}] current hash rate: {} lower than min hash rate {}.'.format(rig_name, name, hr, min_hr), errors)
+			self.error('[{}.{}.{}] current hash rate: {} lower than min hash rate {}.'.format(rig_name, name, device_id, hr, min_hr), errors)
 		if(fan_speed<min_fan_speed):
 			self.error('[{}.{}] current fan speed: {} lower than min fan speed {}.'.format(rig_name, name, fan_speed, min_fan_speed), errors)
 

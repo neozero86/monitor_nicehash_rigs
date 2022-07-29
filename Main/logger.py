@@ -1,5 +1,4 @@
 import logging
-from singleton import Singleton
 import sys
 
 class Logger:

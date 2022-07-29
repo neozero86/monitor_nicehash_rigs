@@ -1,14 +1,14 @@
-import nicehash
+from Main.nicehash_private_api import NicehashPrivateApi
 from Main.monitor import Monitor
 from Main.conf import Configuration
 from Main.logger import Logger
-from Main.mail_sender import AlertEmailSender
+from Main.mail_sender import MailSender
 
 def main():
 	conf, rigs, devices = Configuration.constants()
 	logger = Logger()
-	api = nicehash.private_api(conf.organisation_id, conf.key, conf.secret)
-	email_sender = AlertEmailSender(conf.mail.gmail_username,
+	api = NicehashPrivateApi(conf.organisation_id, conf.key, conf.secret)
+	email_sender = MailSender(conf.mail.gmail_username,
                                     conf.mail.gmail_password,
                                     conf.mail.notification_email,
                                     conf.mail.email_subject)
