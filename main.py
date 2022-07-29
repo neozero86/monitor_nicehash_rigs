@@ -18,13 +18,13 @@ def monitor():
 	error_count = 0
 	while True:
 		errors = []
-		try:
-			for rig_name,rig_id in RIGS.items():
+		for rig_name,rig_id in RIGS.items():
+			try:
 				logger.info(rig_name)
 				if (check_status(rig_name, rig_id, errors)):
 					check_details(rig_name, rig_id, errors)
-		except Exception as e:
-			error('Script error [{}]'.format(str(e)), errors, True)
+			except Exception as e:
+				error('Rig: {}; Script error [{}]'.format(rig_name, str(e)), errors, True)
 		if (errors):
 			error_count += 1
 		else:
