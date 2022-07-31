@@ -14,5 +14,7 @@ class OperationStatus():
     def is_ok(self):
         return False
 
+    def is_down(self):
+        return False
     
 

@@ -8,6 +8,9 @@ from hashlib import sha256
 
 class NicehashPrivateApi():
 
+    EMPTY_STATUS_REQUEST = "{'algorithms': {}}"
+    EMPTY_DETAILS_REQUEST = "'minerStatus': 'OFFLINE'"
+
     def __init__(self, organisation_id, key, secret, verbose=False, host='https://api2.nicehash.com'):
         self.key = key
         self.secret = secret
@@ -16,10 +19,10 @@ class NicehashPrivateApi():
         self.verbose = verbose
 
     def get_my_rig_stats(self, rig_id):
-        return self.__request('GET', '/main/api/v2/mining/algo/stats', 'rigId=' + rig_id, None)
+        return self.__repeated_request('GET', '/main/api/v2/mining/algo/stats', 'rigId=' + rig_id, None)
 
     def get_my_rig_details(self, rig_id):
-        return self.__request('GET', '/main/api/v2/mining/rig2/'+ rig_id,'', None)
+        return self.__repeated_request('GET', '/main/api/v2/mining/rig2/'+ rig_id,'', None)
 
     def restart_rig(self, rig_id):
         return self.__do_action(rig_id, 'RESTART')
@@ -40,7 +43,20 @@ class NicehashPrivateApi():
             "rigId": rig_id,
             "action": action
         }
-        return self.__request('POST', '/main/api/v2/mining/rigs/status2/','', action_info)
+        return self.__repeated_request('POST', '/main/api/v2/mining/rigs/status2/','', action_info)
+
+    def __repeated_request(self, method, path, query, body):
+        result = {}
+        count = 0
+        while not result and count < 4:
+            count += 1
+            try:
+                result = self.__request(method, path, query, body)
+                if (NicehashPrivateApi.EMPTY_STATUS_REQUEST == str(result) or NicehashPrivateApi.EMPTY_DETAILS_REQUEST in str(result)):
+                    result = {}
+            except Exception as e:
+                result = {}
+        return result
 
     def __request(self, method, path, query, body):
 

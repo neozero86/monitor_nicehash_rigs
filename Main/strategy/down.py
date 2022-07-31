@@ -7,3 +7,6 @@ class Down(OperationStatus):
 
     def should_wait(self):
         return True
+
+    def is_down(self):
+        return True

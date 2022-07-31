@@ -80,9 +80,10 @@ class Rig():
             solution = self.solutions.pop(0)
             solution.solve(api, self.id, email_sender, self.problem, logger)
             self.operation_status = solution.next_status()
-        if(self.problem == None and not self.operation_status.is_ok()):
-            self.operation_status = Normal()
+        if(self.problem == None and self.operation_status.is_down()):
             email_sender.send_email(email_content='rig:{} NORMALIZED'.format(self.name))
+        if(self.problem == None and not self.operation_status.is_ok()):    
+            self.operation_status = Normal()
 
     def set_thresholds(self, device_stats):
         for device in self.devices.values():
