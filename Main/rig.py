@@ -42,16 +42,20 @@ class Rig():
             self.rejected_ratio = 1
 
     def update_details(self, actual_info, device_stats):
+        self.speed = 0
         if "minerStatus" not in actual_info:
             return False
         self.status = Status[actual_info["minerStatus"]]
         if(not self.status.value):
+            return False
+        if "devices" not in actual_info:
             return False
         for device_actual_info in actual_info["devices"]:
             id = device_actual_info["id"]
             if (id not in self.devices):
                 self.devices[id] = Device(id, device_actual_info["name"], self, Status[device_actual_info["status"]["enumName"]])
             self.devices[id].update(device_actual_info)
+            self.speed += self.devices[id].hr
         self.set_thresholds(device_stats)
         return True
 
