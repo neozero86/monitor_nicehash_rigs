@@ -4,9 +4,9 @@ from Main.problem.high_rejected_ratio import HighRejectedRatio
 from Main.problem.host_down import HostDown
 from Main.problem.null_accepted_speed import NullAcceptedSpeed
 from Main.status import Status
-from Main.strategy.down import Down
-from Main.strategy.error import Error
-from Main.strategy.normal import Normal
+from Main.operational_status.down import Down
+from Main.operational_status.error import Error
+from Main.operational_status.normal import Normal
 import heapq
 
 class Rig():

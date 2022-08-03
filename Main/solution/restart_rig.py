@@ -1,5 +1,5 @@
 from Main.solution.solution import Solution
-from Main.strategy.wait import Wait
+from Main.operational_status.wait import Wait
 
 class RestartRig(Solution):
     

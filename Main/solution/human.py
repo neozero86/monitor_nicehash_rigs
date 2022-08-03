@@ -1,5 +1,5 @@
 from Main.solution.solution import Solution
-from Main.strategy.down import Down
+from Main.operational_status.down import Down
 
 class Human(Solution):
     
