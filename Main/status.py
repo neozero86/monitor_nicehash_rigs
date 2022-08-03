@@ -7,6 +7,7 @@ class Status(Enum):
     STOPPED = False
     OFFLINE = False
     ERROR = False
+    UNKNOWN = False
     
     @staticmethod
     def from_str(text):

@@ -1,4 +1,5 @@
 from Main.device import Device
+from Main.problem.device_count_error import DeviceCountError
 from Main.problem.high_rejected_ratio import HighRejectedRatio
 from Main.problem.host_down import HostDown
 from Main.problem.null_accepted_speed import NullAcceptedSpeed
@@ -9,9 +10,10 @@ from Main.strategy.normal import Normal
 import heapq
 
 class Rig():
-    def __init__(self, id, name, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
+    def __init__(self, id, name, devices_count, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
         self.id = id
         self.name = name
+        self.devices_count = devices_count
         self.max_rejected_ratio = max_rejected_ratio
         self.devices = {}
         self.algorithm = algorithm
@@ -24,6 +26,8 @@ class Rig():
         self.solutions = None
 
     def update(self, status):
+        if "algorithms" not in status:
+            return False
         status = status["algorithms"]
         if (self.algorithm not in status or not status[self.algorithm]["isActive"]):
             self.status = Status.INACTIVE
@@ -38,6 +42,8 @@ class Rig():
             self.rejected_ratio = 1
 
     def update_details(self, actual_info, device_stats):
+        if "minerStatus" not in actual_info:
+            return False
         self.status = Status[actual_info["minerStatus"]]
         if(not self.status.value):
             return False
@@ -58,6 +64,8 @@ class Rig():
                 errors.append(NullAcceptedSpeed(self.name))
             elif (self.rejected_ratio > self.max_rejected_ratio):
                 errors.append(HighRejectedRatio(self.name,self.rejected_ratio))
+            if len(self.devices)!=self.devices_count:
+                errors.append(DeviceCountError(self.name, self.devices_count, len(self.devices)))
             for device in self.devices.values():
                 errors.extend(device.check())
         if (errors):

@@ -1,7 +1,7 @@
 from Main.problem.metric_exceeded_inferior_limit import MetricExceededInferiorLimit
 from Main.problem.metric_exceeded_superior_limit import MetricExceededSuperiorLimit
 from Main.problem.no_vram import NoVram
-from Main.problem.script_error import ScriptError
+from Main.problem.unrecognized_device import UnrecognizedDevice
 from Main.problem.wrong_status import WrongStatus
 from Main.status import Status
 
@@ -43,7 +43,7 @@ class Device():
     def check(self):
         errors=[]
         if (not self.thresholds):
-            errors.append(ScriptError(self.rig.name, 'device [{}] not recognized'.format(self.name)))
+            errors.append(UnrecognizedDevice(self.rig.name, 'device [{}] not recognized'.format(self.name)))
             return errors
         if(not self.status.value):
             errors.append(WrongStatus(self.rig.name, self.name, self.id, self.status.name))
