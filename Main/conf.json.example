@@ -5,6 +5,24 @@
   "organisation_id": "NICEHASH_ORG_ID",
   "key": "NICEHASH_API_KEY",
   "secret": "NICEHASH_API_SECRET" ,
+  "rigs": [
+    {
+      "id": "ID_RIG_1",
+      "name": "NAME_RIG_1",
+      "devices": AMOUNT_OF_DEVICES_IN_RIG
+    },
+    {
+      "id": "ID_RIG_2",
+      "name": "NAME_RIG_2",
+      "devices": 2
+    },
+    {
+      "id": "ID_RIG_3",
+      "name": "NAME_RIG_3",
+      "devices": 3
+    }
+  ]
+  
   "rigs": {
     "r_NOMBRE_RIG_1": "ID_RIG_1",
     "r_NOMBRE_RIG_2": "ID_RIG_2"
