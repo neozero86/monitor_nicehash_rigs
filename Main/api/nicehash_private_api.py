@@ -8,9 +8,6 @@ from hashlib import sha256
 
 class NicehashPrivateApi():
 
-    EMPTY_STATUS_REQUEST = "{'algorithms': {}}"
-    EMPTY_DETAILS_REQUEST = "'minerStatus': 'OFFLINE'"
-
     def __init__(self, organisation_id, key, secret, verbose=False, host='https://api2.nicehash.com'):
         self.key = key
         self.secret = secret
@@ -52,8 +49,6 @@ class NicehashPrivateApi():
             count += 1
             try:
                 result = self.__request(method, path, query, body)
-                if (NicehashPrivateApi.EMPTY_STATUS_REQUEST == str(result) or NicehashPrivateApi.EMPTY_DETAILS_REQUEST in str(result)):
-                    result = {}
             except Exception as e:
                 result = {}
         return result

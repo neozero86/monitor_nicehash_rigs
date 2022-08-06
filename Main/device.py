@@ -4,6 +4,7 @@ from Main.problem.no_vram import NoVram
 from Main.problem.unrecognized_device import UnrecognizedDevice
 from Main.problem.wrong_status import WrongStatus
 from Main.status import Status
+from Main.api.api_result_constants import *
 
 class Device():
     def __init__(self, id, name, rig, status=Status.ACTIVE):
@@ -15,6 +16,7 @@ class Device():
         self.power = 0
         self.hr = 0
         self.fan_speed = 0
+        self.temp_encoded = 0
         self.core_temp = 0
         self.hot_spot_temp = 0
         self.vram_temp = 0
@@ -26,19 +28,14 @@ class Device():
                 break
 
     def update(self, actual_info):
-        self.power = actual_info["powerUsage"]
-        self.hr = float(actual_info["speeds"][0]["speed"])
-        self.fan_speed = actual_info["revolutionsPerMinutePercentage"]
-        self.temp_encoded = actual_info["temperature"]
-        self.core_temp = self.temp_encoded % 65536
-        self.hot_spot_temp = self.temp_encoded / 65536
-        nhqm = actual_info["nhqm"].split(";")
-        nhqm = [i for i in nhqm if "=" in i]
-        nhqm = {measure.split("=")[0]: measure.split("=")[1] for measure in nhqm}
-        if ("MT" not in nhqm):
-            self.vram_temp = -1
-        else:
-            self.vram_temp = int(nhqm["MT"])-128	
+        self.power = actual_info[POWER]
+        self.hr = actual_info[HR]
+        self.fan_speed = actual_info[FAN_SPEED]
+        self.temp_encoded = actual_info[TEMP_ENCODED]
+        self.core_temp = actual_info[CORE_TEMP]
+        self.hot_spot_temp = actual_info[HOT_SPOT_TEMP]
+        self.vram_temp = actual_info[VRAM_TEMP]
+        self.status = actual_info[STATUS]
 
     def check(self):
         errors=[]

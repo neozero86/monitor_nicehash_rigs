@@ -7,14 +7,22 @@ class Problem:
     def __init__(self, message):
         self.message = message
 
+    def solutions(self):
+        return [RestartWorker(),RestartRig(),Human()]
+
+    def severity(self):
+        return 1
+
     def __str__(self):
         return self.message
 
     def __repr__(self):
         return self.__str__()
 
-    def solutions(self):
-        return [RestartWorker(),RestartRig(),Human()]
+    def __eq__(self, other):
+        if isinstance(other, Problem):
+            return self.message == other.message
+        return False
 
-    def severity(self):
-        return 1
+    def __hash__(self):
+        return hash(self.message)

@@ -8,3 +8,11 @@ class Solution():
 
     def solve(self, api, rig_id, email_sender, problem, logger):
         pass
+
+    def __eq__(self, other):
+        if isinstance(other, Solution):
+            return self.__class__ == other.__class__
+        return False
+            
+    def __hash__(self):
+        return hash(self.__class__)

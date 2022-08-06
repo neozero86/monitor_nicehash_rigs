@@ -15,13 +15,15 @@ class MailSender:
         self.email_subject = email_subject
         self.logger = Logger()
 
-    def send_email(self, email_content):
+    def send_email(self, email_content, email_subject=None):
+        if(not email_subject):
+            email_subject=self.email_subject
         self.send_email_notification(self.gmail_user,
                                 self.gmail_password,
                                 self.target_email,
                                 email_content,
-                                self.email_subject)
-        self.logger.debug('Email sent for subject = {}, content = {}'.format(self.email_subject, email_content))
+                                email_subject)
+        self.logger.info('Email sent for subject = {}, content = {}'.format(email_subject, email_content))
 
     def send_email_notification(self, gmail_user, gmail_password, target_email, email_content, email_subject):
         user = '{}@gmail.com'.format(gmail_user)

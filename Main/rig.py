@@ -3,11 +3,11 @@ from Main.problem.device_count_error import DeviceCountError
 from Main.problem.high_rejected_ratio import HighRejectedRatio
 from Main.problem.host_down import HostDown
 from Main.problem.null_accepted_speed import NullAcceptedSpeed
+from Main.report.reporter import Reporter
 from Main.status import Status
-from Main.operational_status.down import Down
 from Main.operational_status.error import Error
 from Main.operational_status.normal import Normal
-import heapq
+from Main.api.api_result_constants import *
 
 class Rig():
     def __init__(self, id, name, devices_count, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
@@ -24,36 +24,27 @@ class Rig():
         self.problem = None
         self.operation_status = Normal()
         self.solutions = None
+        self.speed = 0
+        self.speed_accepted = 0
+        self.speed_rejected = 0
+        self.rejected_ratio = 0
 
     def update(self, status):
-        if "algorithms" not in status:
+        self.status = status[STATUS]
+        if (not self.status.value):
             return False
-        status = status["algorithms"]
-        if (self.algorithm not in status or not status[self.algorithm]["isActive"]):
-            self.status = Status.INACTIVE
-            return False
-        self.status = Status.ACTIVE
-        status = status[self.algorithm]
-        self.speed_accepted=status["speedAccepted"]
-        self.speed_rejected=status["speedRejected"]
-        if (self.speed_accepted != 0): 
-            self.rejected_ratio = self.speed_rejected/(self.speed_accepted+self.speed_rejected)
-        else:
-            self.rejected_ratio = 1
+        self.speed_accepted = status[SPEED_ACCEPTED]
+        self.speed_rejected = status[SPEED_REJECTED]
+        self.rejected_ratio = status[REJECTED_RATIO]
 
     def update_details(self, actual_info, device_stats):
         self.speed = 0
-        if "minerStatus" not in actual_info:
-            return False
-        self.status = Status[actual_info["minerStatus"]]
+        self.status = actual_info[STATUS]
         if(not self.status.value):
             return False
-        if "devices" not in actual_info:
-            return False
-        for device_actual_info in actual_info["devices"]:
-            id = device_actual_info["id"]
+        for id, device_actual_info in actual_info[DEVICES].items():
             if (id not in self.devices):
-                self.devices[id] = Device(id, device_actual_info["name"], self, Status[device_actual_info["status"]["enumName"]])
+                self.devices[id] = Device(id, device_actual_info[NAME], self, device_actual_info[STATUS])
             self.devices[id].update(device_actual_info)
             self.speed += self.devices[id].hr
         self.set_thresholds(device_stats)
@@ -75,12 +66,15 @@ class Rig():
         if (errors):
             self.error_count += 1
             self.total_error_count += 1
+            Reporter.instance().add_interaction_with_error(self.name)
         else:
             self.error_count = 0
             self.problem = None
+            self.solutions = None
 
         if (self.error_count > self.error_threshold and not self.operation_status.should_wait()):
             self.problem = sorted(errors, key=lambda x: x.severity(), reverse=True)[0]
+            Reporter.instance().add_problem(self.name,self.problem)
             self.operation_status = Error()
             self.solutions = self.problem.solutions()
 
@@ -90,6 +84,7 @@ class Rig():
     def solve_errors(self, api, email_sender, logger):
         if (self.problem != None and not self.operation_status.should_wait()):
             solution = self.solutions.pop(0)
+            Reporter.instance().add_solution(self.name, solution)
             solution.solve(api, self.id, email_sender, self.problem, logger)
             self.operation_status = solution.next_status()
         if(self.problem == None and self.operation_status.is_down()):

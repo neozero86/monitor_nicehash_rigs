@@ -1,5 +1,5 @@
 {
-  "polling_interval_sec": 60, 
+  "polling_interval_sec": 1, 
   "max_rejected_ratio": 0.1,
   "error_threshold": 3,
   "rigs": [
