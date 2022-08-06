@@ -24,7 +24,7 @@ class Collector():
         self.add_to_collection(rig_name, type(problem).__name__, self.problems)
 
     def add_solution(self, rig_name, solution):
-        self.add_to_collection(rig_name, solution, self.applied_solutions)
+        self.add_to_collection(rig_name, type(solution).__name__, self.applied_solutions)
 
     def add_to_collection(self, rig_name, object, collection):
         if rig_name not in collection:

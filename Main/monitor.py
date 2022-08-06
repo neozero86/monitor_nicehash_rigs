@@ -29,9 +29,6 @@ class Monitor():
                     Reporter.instance().add_errors(rig.name, rig_errors)
                     errors.extend(rig_errors)
                     rig.solve_errors(self.api, self.email_sender, self.logger)
-                except RequestException:
-                    error = ScriptError(rig.name, e)
-                    errors.append(error)
                 except Exception as e:
                     error = ScriptError(rig.name, e)
                     errors.append(error)

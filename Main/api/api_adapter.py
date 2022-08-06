@@ -10,8 +10,13 @@ class ApiAdapter():
         is_ok = False
         retry = 0
         while (not is_ok and retry < 6):
-            status = self.api.get_my_rig_stats(rig_id)
-            is_ok, result = self.parse_status(status)
+            try:
+                status = self.api.get_my_rig_stats(rig_id)
+                is_ok, result = self.parse_status(status)
+            except Exception:
+                result = {}
+                result[STATUS] = Status.INACTIVE
+                is_ok = False
             retry += 1
         return result
 
@@ -37,8 +42,13 @@ class ApiAdapter():
         is_ok = False
         retry = 0
         while (not is_ok and retry < 6):
-            details = self.api.get_my_rig_details(rig_id)
-            is_ok, result = self.parse_details(details)
+            try:
+                details = self.api.get_my_rig_details(rig_id)
+                is_ok, result = self.parse_details(details)
+            except Exception:
+                result = {}
+                result[STATUS] = Status.INACTIVE
+                is_ok = False
             retry += 1
         return result
 

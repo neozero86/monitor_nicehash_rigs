@@ -8,4 +8,4 @@ class Human(Solution):
 
     def solve(self, api, rig_id, email_sender, problem, logger):
         logger.error('human strategy reached for problem: {}'.format(problem))
-        email_sender.send_email(email_content=str(problem))
+        email_sender.send_email(email_content=str(problem), subject='Issue OPEN Rig {}'.format(rig_id))
