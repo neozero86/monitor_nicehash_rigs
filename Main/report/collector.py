@@ -18,10 +18,10 @@ class Collector():
             self.add_solution(rig_name, solution)
 
     def add_error(self, rig_name, error):
-        self.add_to_collection(rig_name, error, self.errors)
+        self.add_to_collection(rig_name, type(error).__name__, self.errors)
 
     def add_problem(self, rig_name, problem):
-        self.add_to_collection(rig_name, problem, self.problems)
+        self.add_to_collection(rig_name, type(problem).__name__, self.problems)
 
     def add_solution(self, rig_name, solution):
         self.add_to_collection(rig_name, solution, self.applied_solutions)
