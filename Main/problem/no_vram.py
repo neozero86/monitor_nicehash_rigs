@@ -5,4 +5,4 @@ class NoVram(Problem):
         super(NoVram, self).__init__('[{}.{}.{}] no vram metric'.format(rig_name, device_name, device_id))
 
     def severity(self):
-        return 2
+        return 3

@@ -33,7 +33,7 @@ class MailSender:
         msg["Subject"] = email_subject
         msg["From"] = user
         msg['To'] = ", ".join(target_email)
-        msg.attach(MIMEText(email_content, 'plain'))
+        msg.attach(MIMEText(email_content, 'html'))
 
         try:
             server = smtplib.SMTP(SMTP_SERVER, PORT)

@@ -58,21 +58,43 @@ class Reporter():
         with open("logs/Report_bkp.txt", "w") as text_file:
             text_file.write(report)
         
+    def dict_to_html(self, dictionary):
+        result = ""
+        for k in dictionary:
+            result += "<span style=\"color:#2980b9\"><strong><span style=\"font-size:16px\">" + k + "</strong></span></span>"
+            table = "<table border=0 style=\"border-spacing: 10px 0rem;\">"
+            for k2,v in dictionary[k].items():
+                table += "<tr>"
+                table += "<td>" + str(k2) + "</td>"
+                table += "<td>" + str(v) + "</td>"
+                table += "</tr>"
+            table += "</table><br/>"
+            result += table
+        return result
+
+    def to_html(self, plain_dict):
+        data = ""
+        for k in plain_dict:
+            data += "<td style=\"text-align:left; padding: 10px;\"><span style=\"color:#2980b9\"><strong>" + k + "</strong></span></td>"
+            data += "<td style=\"text-align:center; padding: 10px;\">" + str(plain_dict[k]) + "</td>"
+            data += "<tr>"
+ 
+        data = "<table border=1>" + data + "</table>"
+        return data
 
     def build_report(self):
         report = ""
-        report += "Daily Report\n"
-        report += "================\n"
-        report += "\n"
-        report += "Errors:\n"
-        report += pprint.pformat(self.collector.errors, indent=4) + "\n"
-        report += "\n"
-        report += "Problems:\n"
-        report += pprint.pformat(self.collector.problems, indent=4) + "\n"
-        report += "\n"
-        report += "Solutions:\n"
-        report += pprint.pformat(self.collector.applied_solutions, indent=4) + "\n"
-        report += "\n"
-        report += "Amount of errors:\n"
-        report += pprint.pformat(self.collector.interaction_errors, indent=4) + "\n"
+        report += "<p><center><span style=\"font-size:48px\"><u><strong>Daily Report</strong></u></span></center></p>"
+        report += "<p><br />&nbsp;</p>"
+        report += "<p><span style=\"color:#ff0000\"><span style=\"font-size:28px\"><strong>Problems</strong></span></span></p>"
+        report += self.dict_to_html(self.collector.problems)
+        report += "<p><br />&nbsp;</p>"
+        report += "<p><span style=\"color:#70ad47\"><span style=\"font-size:28px\"><strong>Solutions</strong></span></span></p>"
+        report += self.dict_to_html(self.collector.applied_solutions)
+        report += "<p><br />&nbsp;</p>"
+        report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Accumulated Errors</strong></span></span></p>"
+        report += self.to_html(self.collector.interaction_errors)
+        report += "<p><br />&nbsp;</p>"
+        report += "<p><span style=\"color:#f4b083\"><span style=\"font-size:28px\"><strong>Errors Detail</strong></span></span></p>"
+        report += self.dict_to_html(self.collector.errors)
         return report

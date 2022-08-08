@@ -24,14 +24,24 @@ class Rig():
         self.problem = None
         self.operation_status = Normal()
         self.solutions = None
+        self.reset_values()
         self.speed = 0
         self.speed_accepted = 0
         self.speed_rejected = 0
         self.rejected_ratio = 0
 
+    def reset_values(self):
+        self.speed = 0
+        self.speed_accepted = 0
+        self.speed_rejected = 0
+        self.rejected_ratio = 0
+        for device in self.devices.values():
+            device.reset_values()
+
     def update(self, status):
         self.status = status[STATUS]
         if (not self.status.value):
+            self.reset_values()
             return False
         self.speed_accepted = status[SPEED_ACCEPTED]
         self.speed_rejected = status[SPEED_REJECTED]
@@ -41,10 +51,11 @@ class Rig():
         self.speed = 0
         self.status = actual_info[STATUS]
         if(not self.status.value):
+            self.reset_values()
             return False
         for id, device_actual_info in actual_info[DEVICES].items():
             if (id not in self.devices):
-                self.devices[id] = Device(id, device_actual_info[NAME], self, device_actual_info[STATUS])
+                self.devices[id] = Device(id, device_actual_info[NAME], self)
             self.devices[id].update(device_actual_info)
             self.speed += self.devices[id].hr
         self.set_thresholds(device_stats)

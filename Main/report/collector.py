@@ -18,13 +18,13 @@ class Collector():
             self.add_solution(rig_name, solution)
 
     def add_error(self, rig_name, error):
-        self.add_to_collection(rig_name, type(error).__name__, self.errors)
+        self.add_to_collection(rig_name, error.pretty_print(), self.errors)
 
     def add_problem(self, rig_name, problem):
-        self.add_to_collection(rig_name, type(problem).__name__, self.problems)
+        self.add_to_collection(rig_name, problem.pretty_print(), self.problems)
 
     def add_solution(self, rig_name, solution):
-        self.add_to_collection(rig_name, type(solution).__name__, self.applied_solutions)
+        self.add_to_collection(rig_name, solution.pretty_print(), self.applied_solutions)
 
     def add_to_collection(self, rig_name, object, collection):
         if rig_name not in collection:

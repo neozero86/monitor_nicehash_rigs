@@ -26,3 +26,6 @@ class Problem:
 
     def __hash__(self):
         return hash(self.message)
+
+    def pretty_print(self):
+        return type(self).__name__

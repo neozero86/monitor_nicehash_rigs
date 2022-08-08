@@ -16,3 +16,6 @@ class Solution():
             
     def __hash__(self):
         return hash(self.__class__)
+
+    def pretty_print(self):
+        return type(self).__name__
