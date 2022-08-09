@@ -25,6 +25,9 @@ class Reporter():
             scheduler_backup.start()
             atexit.register(lambda: scheduler_backup.shutdown())
 
+    def pay(self, rig_name, amount):
+        self.collector.pay(rig_name, amount)
+
     def add_errors(self, rig_name, errors):
         self.collector.add_errors(rig_name, errors)
 
@@ -94,6 +97,9 @@ class Reporter():
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Accumulated Errors</strong></span></span></p>"
         report += self.to_html(self.collector.interaction_errors)
+        report += "<p><br />&nbsp;</p>"
+        report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Profitability</strong></span></span></p>"
+        report += self.to_html(self.collector.paid_amounts)
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#f4b083\"><span style=\"font-size:28px\"><strong>Errors Detail</strong></span></span></p>"
         report += self.dict_to_html(self.collector.errors)

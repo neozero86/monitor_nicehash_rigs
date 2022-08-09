@@ -29,6 +29,7 @@ class Rig():
         self.speed_accepted = 0
         self.speed_rejected = 0
         self.rejected_ratio = 0
+        self.unpaid_amount = 0
 
     def reset_values(self):
         self.speed = 0
@@ -53,6 +54,9 @@ class Rig():
         if(not self.status.value):
             self.reset_values()
             return False
+        if (actual_info[UNPAID_AMOUNT]<self.unpaid_amount):
+            Reporter.instance().pay(self.name,self.unpaid_amount)
+        self.unpaid_amount = actual_info[UNPAID_AMOUNT]
         for id, device_actual_info in actual_info[DEVICES].items():
             if (id not in self.devices):
                 self.devices[id] = Device(id, device_actual_info[NAME], self)

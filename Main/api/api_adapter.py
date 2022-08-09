@@ -63,6 +63,11 @@ class ApiAdapter():
         if DEVICES not in details:
             result[STATUS] = Status.INACTIVE
             return (False, result)
+        try:
+            result[UNPAID_AMOUNT] = float(details["stats"][0]["unpaidAmount"])
+        except Exception as e:
+            result[STATUS] = Status.INACTIVE
+            return (False, result)   
         is_ok = True
         result[DEVICES] = {}
         for device_actual_info in details[DEVICES]:

@@ -4,7 +4,11 @@ class Collector():
         self.problems = {}
         self.applied_solutions = {}
         self.interaction_errors = {}
+        self.paid_amounts = {}
     
+    def pay(self, rig_name, amount):
+        self.increment_collection(rig_name, self.paid_amounts, amount)
+
     def add_errors(self, rig_name, errors):
         for error in errors:
             self.add_error(rig_name, error)
@@ -34,7 +38,7 @@ class Collector():
     def add_interaction_with_error(self, name):
         self.increment_collection(name, self.interaction_errors)
 
-    def increment_collection(self, name, collection):
+    def increment_collection(self, name, collection, amount=1):
         if name not in collection:
             collection[name] = 0
-        collection[name] += 1
+        collection[name] += amount
