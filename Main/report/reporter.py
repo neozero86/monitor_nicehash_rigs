@@ -55,7 +55,7 @@ class Reporter():
     def save_to_disk(self):
         self.logger.debug("Persisting report to disk")
         report = self.build_report()
-        with open("logs/Report_bkp.txt", "w") as text_file:
+        with open("logs/Report_bkp.html", "w") as text_file:
             text_file.write(report)
         
     def dict_to_html(self, dictionary):
