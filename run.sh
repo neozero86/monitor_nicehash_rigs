@@ -1,3 +1,5 @@
+python3 -m pip -r requirements.txt
+
 function cleanup {
   echo "killing report process id: "$report_pid
   kill -9 $report_pid
