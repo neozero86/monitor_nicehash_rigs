@@ -17,4 +17,4 @@ nohup python3 Main/report/show_report.py &
 export report_pid=$(echo $!)
 nohup frontail logs/out.log --ui-highlight &
 export log_pid=$(echo $!)
-nohup python3 Main/main.py &
+python3 Main/main.py 
