@@ -6,7 +6,7 @@ class RestartWorker(Solution):
     def next_status(self):
         return Wait(4)
 
-    def solve(self, api, rig_id, email_sender, problem, logger):
+    def solve(self, api, rig_id, rig_name, email_sender, problem, logger):
         logger.error('restart worker strategy reached for problem: {}'.format(problem))
         api.restart_worker(rig_id)
         logger.info('worker restarted')

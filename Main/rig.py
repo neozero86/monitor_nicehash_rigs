@@ -100,7 +100,7 @@ class Rig():
         if (self.problem != None and not self.operation_status.should_wait()):
             solution = self.solutions.pop(0)
             Reporter.instance().add_solution(self.name, solution)
-            solution.solve(api, self.id, email_sender, self.problem, logger)
+            solution.solve(api, self.id, self.name, email_sender, self.problem, logger)
             self.operation_status = solution.next_status()
         if(self.problem == None and self.operation_status.is_down()):
             email_sender.send_email(email_content='rig:{} NORMALIZED'.format(self.name), email_subject='Issue CLOSED Rig {}'.format(self.name))
