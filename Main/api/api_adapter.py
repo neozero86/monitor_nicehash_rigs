@@ -99,11 +99,11 @@ class ApiAdapter():
     def restart_rig(self, rig_id):
         return self.api.restart_rig(rig_id)
     
-    def stop_rig(self, rig_id):
-        return self.api.stop_rig(rig_id)
+    def stop_worker(self, rig_id):
+        return self.api.stop_worker(rig_id)
 
-    def start_rig(self, rig_id):
-        return self.api.start_rig(rig_id)
+    def start_worker(self, rig_id):
+        return self.api.start_worker(rig_id)
 
     def restart_worker(self, rig_id):
         return self.api.restart_worker(rig_id)

@@ -24,16 +24,16 @@ class NicehashPrivateApi():
     def restart_rig(self, rig_id):
         return self.__do_action(rig_id, 'RESTART')
 
-    def stop_rig(self, rig_id):
+    def stop_worker(self, rig_id):
         return self.__do_action(rig_id, 'STOP')
     
-    def start_rig(self, rig_id):
+    def start_worker(self, rig_id):
         return self.__do_action(rig_id, 'START')
 
     def restart_worker(self, rig_id):
-        self.stop_rig(rig_id)
+        self.stop_worker(rig_id)
         sleep(10)
-        self.start_rig(rig_id)
+        self.start_worker(rig_id)
 
     def __do_action(self, rig_id, action):
         action_info = {

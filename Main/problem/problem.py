@@ -1,6 +1,7 @@
 from Main.solution.human import Human
 from Main.solution.restart_rig import RestartRig
 from Main.solution.restart_worker import RestartWorker
+from Main.solution.start_worker import StartWorker
 
 
 class Problem:
@@ -8,7 +9,7 @@ class Problem:
         self.message = message
 
     def solutions(self):
-        return [RestartWorker(),RestartRig(),Human()]
+        return [RestartWorker(),RestartRig(),StartWorker(),Human()]
 
     def severity(self):
         return 1

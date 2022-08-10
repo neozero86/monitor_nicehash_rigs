@@ -60,13 +60,13 @@ class Device():
         if(self.vram_temp==-1):
             errors.append(NoVram(self.rig.name, self.name, self.id))
         elif(self.vram_temp>self.thresholds.max_vram_temp):
-            errors.append(HighVRamTemp(self.rig.name, self.name, self.id, "vram_temp", self.vram_temp, self.thresholds.max_vram_temp))
+            errors.append(HighVRamTemp(self.rig.name, self.name, self.id, self.vram_temp, self.thresholds.max_vram_temp))
         if(self.power>self.thresholds.max_power):
             errors.append(HighPower(self.rig.name, self.name, self.id, "power", self.power, self.thresholds.max_power))
         if(self.temp_encoded<0):
             errors.append(BadCoreTempReading(self.rig.name, self.name, self.id))
         elif(self.core_temp>self.thresholds.max_core_temp):
-            errors.append(HighCoreTemp(self.rig.name, self.name, self.id, "core temp", self.core_temp, self.thresholds.max_core_temp))
+            errors.append(HighCoreTemp(self.rig.name, self.name, self.id, self.core_temp, self.thresholds.max_core_temp))
         if(self.hr<self.thresholds.min_hr):
             errors.append(LowHashRate(self.rig.name, self.name, self.id, "hash rate", self.hr, self.thresholds.min_hr))
         if(self.fan_speed<self.thresholds.min_fan_speed):
