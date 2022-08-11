@@ -1,4 +1,4 @@
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 function cleanup {
   echo "killing report process id: "$report_pid
