@@ -66,7 +66,7 @@ class Reporter():
         for k in dictionary:
             result += "<span style=\"color:#2980b9\"><strong><span style=\"font-size:16px\">" + k + "</strong></span></span>"
             table = "<table border=0 style=\"border-spacing: 10px 0rem;\">"
-            for k2,v in dictionary[k].items():
+            for k2,v in self.sorted_by_key(dictionary[k]).items():
                 table += "<tr>"
                 table += "<td>" + str(k2) + "</td>"
                 table += "<td>" + str(v) + "</td>"
@@ -96,11 +96,14 @@ class Reporter():
         report += self.dict_to_html(self.collector.applied_solutions)
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Accumulated Errors</strong></span></span></p>"
-        report += self.to_html(self.collector.interaction_errors)
+        report += self.to_html(self.sorted_by_key(self.collector.interaction_errors))
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Profitability</strong></span></span></p>"
-        report += self.to_html(dict(sorted(self.collector.paid_amounts.items(), key=lambda item: item[1], reverse=True)))
+        report += self.to_html(self.sorted_by_key(self.collector.paid_amounts))
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#f4b083\"><span style=\"font-size:28px\"><strong>Errors Detail</strong></span></span></p>"
         report += self.dict_to_html(self.collector.errors)
         return report
+
+    def sorted_by_key(self, dictionary):
+        return dict(sorted(dictionary.items(), key=lambda item: item[1], reverse=True))
