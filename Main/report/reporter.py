@@ -99,7 +99,7 @@ class Reporter():
         report += self.to_html(self.collector.interaction_errors)
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#cc3300\"><span style=\"font-size:28px\"><strong>Profitability</strong></span></span></p>"
-        report += self.to_html(self.collector.paid_amounts)
+        report += self.to_html(dict(sorted(self.collector.paid_amounts.items(), key=lambda item: item[1], reverse=True)))
         report += "<p><br />&nbsp;</p>"
         report += "<p><span style=\"color:#f4b083\"><span style=\"font-size:28px\"><strong>Errors Detail</strong></span></span></p>"
         report += self.dict_to_html(self.collector.errors)
