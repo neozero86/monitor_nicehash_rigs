@@ -1,11 +1,9 @@
-from flask import Flask, Response, render_template
-from pygtail import Pygtail
+from flask import Flask, render_template
+import os
 import time
 
 app = Flask(__name__)
 LOG_FILE = 'logs/out.log'
-reader = Pygtail(LOG_FILE, every_n=1)
-reader.readlines()
 
 @app.route('/')
 def index():
@@ -13,15 +11,19 @@ def index():
 
 @app.route('/logs')
 def logs():
-    def generate():      
+    def generate(): 
+        logfile = open(LOG_FILE,"rb")
+        try:
+            logfile.seek(-2000, os.SEEK_END)
+        except OSError:
+            logfile.seek(0)
         while True:
-            for line in reader:
-                if not line:
-                    string = '\n'
-                else:
-                    string = str(line)
-                yield string
-                time.sleep(0.05)  
+            line = logfile.readline().decode()
+            if not line:
+                time.sleep(0.05)
+                continue
+
+            yield line  
 
     return app.response_class(generate(), mimetype='text/event-stream')
 
