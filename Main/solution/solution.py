@@ -19,3 +19,9 @@ class Solution():
 
     def pretty_print(self):
         return type(self).__name__
+
+    def __str__(self):
+        return self.pretty_print()
+
+    def __repr__(self):
+        return self.__str__()

@@ -2,6 +2,7 @@ from time import sleep
 
 from requests import RequestException
 from Main.problem.script_error import ScriptError
+from Main.report.general_status import GeneralStatus
 from Main.report.reporter import Reporter
 
 from Main.rig import Rig
@@ -29,6 +30,7 @@ class Monitor():
                     Reporter.instance().add_errors(rig.name, rig_errors)
                     errors.extend(rig_errors)
                     rig.solve_errors(self.api, self.email_sender, self.logger)
+                    GeneralStatus.instance().update(rig)
                 except Exception as e:
                     error = ScriptError(rig.name, e)
                     errors.append(error)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <pre id="output"></pre>
+    <meta charset="utf-8">
+    <title>Logs</title>
+    <script>
+            var output = document.getElementById('output');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ url_for('logs') }}');
+            xhr.send();
+
+            setInterval(function() {
+                output.textContent = xhr.responseText;
+                window.scrollTo(0, document.body.scrollHeight);
+            }, 1000);
+        </script>
+</body>
+</html>
