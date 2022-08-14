@@ -38,7 +38,7 @@ class Reporter():
         }
     def load_collectors(self):
         self.collectors = {
-            DAILY: Collector(),
+            DAILY: self.load_collector(DAILY),
             WEEKLY: self.load_collector(WEEKLY),
             MONTHLY: self.load_collector(MONTHLY),
             YEARLY: self.load_collector(YEARLY),
@@ -80,6 +80,13 @@ class Reporter():
         self.exec_collectors(self.collectors, "add_interaction_with_error", [rig_name])
 
     def send_report(self, dt = datetime.now()):
+        self.logger.info("executing send_report at" + str(dt))
+        self.logger.info("hour: " + str(dt.hour))
+        self.logger.info("minute: " + str(dt.minute))
+        if (dt.hour == 7):
+            self.logger.info("hour 7 OK")
+        if (dt.minute == 0):
+            self.logger.info("minute 0 OK")
         if (dt.hour == 7 and dt.minute == 0):
             self.send_report_by(DAILY)
             self.daily_collector=Collector()

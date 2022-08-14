@@ -15,7 +15,7 @@ def main():
                                     conf.mail.gmail_password,
                                     conf.mail.notification_email,
                                     conf.mail.email_subject)
-    Reporter.instance().init(email_sender, {"interval_seconds":30, "production": True}, logger)
+    Reporter.instance().init(email_sender, {"interval_seconds":60, "production": True}, logger)
     monitor = Monitor(logger, api_adapter, email_sender, rigs, devices,
     conf.error_threshold, conf.max_rejected_ratio, conf.polling_interval_sec)
     monitor.run()
