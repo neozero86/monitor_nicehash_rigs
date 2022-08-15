@@ -79,15 +79,11 @@ class Reporter():
     def add_interaction_with_error(self, rig_name):
         self.exec_collectors(self.collectors, "add_interaction_with_error", [rig_name])
 
-    def send_report(self, dt = datetime.now()):
-        self.logger.info("executing send_report at" + str(dt))
-        self.logger.info("hour: " + str(dt.hour))
-        self.logger.info("minute: " + str(dt.minute))
-        if (dt.hour == 7):
-            self.logger.info("hour 7 OK")
-        if (dt.minute == 0):
-            self.logger.info("minute 0 OK")
-        if (dt.hour == 7 and dt.minute == 0):
+    def send_report(self, dt = None):
+        if (not dt):
+            dt = datetime.now()
+            
+        if (dt.hour == 4 and dt.minute == 0):
             self.send_report_by(DAILY)
             self.daily_collector=Collector()
             if (dt.weekday() == 0):

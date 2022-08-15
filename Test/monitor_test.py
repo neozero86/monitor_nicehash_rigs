@@ -56,20 +56,20 @@ class MonitorTest(unittest.TestCase):
         self.assertEqual(self.expected_error_set, set(self.error_list))
         Reporter.instance().send_report(datetime.strptime('18/09/19 01:55:19', self.FORMAT))
         self.assertEqual([], self.email_sender.mails_sended)
-        Reporter.instance().send_report(datetime.strptime('18/09/19 06:59:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('18/09/19 03:59:19', self.FORMAT))
         self.assertEqual([], self.email_sender.mails_sended)
-        Reporter.instance().send_report(datetime.strptime('18/09/19 07:01:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('18/09/19 04:01:19', self.FORMAT))
         self.assertEqual([], self.email_sender.mails_sended)
-        Reporter.instance().send_report(datetime.strptime('18/09/19 07:00:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('18/09/19 04:00:19', self.FORMAT))
         self.assertEqual(self.emails_sended_daily, self.email_sender.mails_sended)
         self.email_sender.mails_sended = []
-        Reporter.instance().send_report(datetime.strptime('08/08/22 07:00:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('08/08/22 04:00:19', self.FORMAT))
         self.assertEqual(self.emails_sended_weely, self.email_sender.mails_sended)
         self.email_sender.mails_sended = []
-        Reporter.instance().send_report(datetime.strptime('01/08/22 07:00:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('01/08/22 04:00:19', self.FORMAT))
         self.assertEqual(self.emails_sended_monthly, self.email_sender.mails_sended)
         self.email_sender.mails_sended = []
-        Reporter.instance().send_report(datetime.strptime('01/01/22 07:00:19', self.FORMAT))
+        Reporter.instance().send_report(datetime.strptime('01/01/22 04:00:19', self.FORMAT))
         self.assertEqual(self.emails_sended_yearly, self.email_sender.mails_sended)
 
 if __name__ == '__main__':
