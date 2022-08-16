@@ -1,6 +1,7 @@
 from enum import Enum
 
 class Status(Enum):
+    ONLINE = True
     ACTIVE = True
     MINING = True
     INACTIVE = False
@@ -11,6 +12,7 @@ class Status(Enum):
     
     @staticmethod
     def from_str(text):
+        text=text.upper()
         statuses = [status for status in dir(
             Status) if not status.startswith('_')]
         if text in statuses:

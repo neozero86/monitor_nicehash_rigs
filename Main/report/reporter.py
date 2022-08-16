@@ -85,16 +85,16 @@ class Reporter():
             
         if (dt.hour == 4 and dt.minute == 0):
             self.send_report_by(DAILY)
-            self.daily_collector=Collector()
+            self.collectors[DAILY]=Collector()
             if (dt.weekday() == 0):
                 self.send_report_by(WEEKLY)
-                self.weekly_collector=Collector()
+                self.collectors[WEEKLY]=Collector()
             if (dt.day == 1):
                 self.send_report_by(MONTHLY)
-                self.monthly_collector=Collector()
+                self.collectors[MONTHLY]=Collector()
                 if (dt.month == 1):
                     self.send_report_by(YEARLY)
-                    self.yearly_collector=Collector()
+                    self.collectors[YEARLY]=Collector()
             self.save_to_disk()
 
     def send_report_by(self, frequency):
