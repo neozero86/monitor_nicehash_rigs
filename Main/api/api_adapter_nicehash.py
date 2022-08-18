@@ -1,7 +1,7 @@
-from Main.api.api_result_constants import *
+from Main.api.api_constants import *
 from Main.status import Status
 
-class ApiAdapter():
+class ApiAdapterNicehash():
     def __init__(self,api, algorithm="DAGGERHASHIMOTO"):
         self.api = api
         self.algorithm = algorithm
@@ -22,7 +22,7 @@ class ApiAdapter():
 
     def parse_status(self, status):
         result = {}
-        result["status"] = Status.INACTIVE
+        result[STATUS] = Status.INACTIVE
         if "algorithms" not in status:
             return (False, result)
         status = status["algorithms"]

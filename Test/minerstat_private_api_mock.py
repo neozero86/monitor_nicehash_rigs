@@ -1,13 +1,10 @@
 import json
 
-class NicehashPrivateApiMock():
+class MinerstatPrivateApiMock():
 
     def __init__(self): 
-       with open("Test/responses_nicehash.json") as data_file:
+       with open("Test/responses_minerstat.json") as data_file:
             self.responses = json.load(data_file)
-
-    def get_my_rig_stats(self, rig_id):
-        return json.loads(self.responses['get_my_rig_stats'][rig_id])
 
     def get_my_rig_details(self, rig_id):
         return json.loads(self.responses['get_my_rig_details'][rig_id])

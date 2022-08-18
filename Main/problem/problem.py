@@ -30,3 +30,7 @@ class Problem:
 
     def pretty_print(self):
         return type(self).__name__
+
+    def match(self, problem_name):
+        return self.pretty_print() == problem_name
+            

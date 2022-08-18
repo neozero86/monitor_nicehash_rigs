@@ -1,6 +1,5 @@
 from time import sleep
 
-from requests import RequestException
 from Main.problem.script_error import ScriptError
 from Main.report.general_status import GeneralStatus
 from Main.report.reporter import Reporter
@@ -8,11 +7,11 @@ from Main.report.reporter import Reporter
 from Main.rig import Rig
 
 class Monitor():
-    def __init__(self, logger, api, email_sender, rigs, devices, error_threshold, max_rejected_ratio, polling_interval_sec, iterations = -1):
+    def __init__(self, logger, api, email_sender, rigs, devices, error_threshold, max_rejected_ratio, solution_map, polling_interval_sec, iterations = -1):
         self.logger = logger
         self.api = api
         self.email_sender = email_sender
-        self.rigs = [Rig(v.id,k,v.devices, max_rejected_ratio, error_threshold) for k,v in rigs.items()]
+        self.rigs = [Rig(v["id"],k,v["devices"], max_rejected_ratio, error_threshold, solution_map) for k,v in rigs.items()]
         self.devices = devices
         self.error_threshold = error_threshold
         self.polling_interval_sec = polling_interval_sec
@@ -70,7 +69,7 @@ class Monitor():
             self.logger.debug('  Device VRam Temp: {}'.format(device.vram_temp))
             self.logger.debug('  Device Fan speed: {}'.format(device.fan_speed))
             self.logger.debug('  Device Power: {}'.format(device.power))
-            self.logger.debug('  Device Hot Spot Temp: {}'.format(device.hot_spot_temp))
+            #self.logger.debug('  Device Hot Spot Temp: {}'.format(device.hot_spot_temp))
         self.logger.info('')
         self.logger.debug('')
 

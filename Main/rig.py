@@ -7,14 +7,15 @@ from Main.report.reporter import Reporter
 from Main.status import Status
 from Main.operational_status.error import Error
 from Main.operational_status.normal import Normal
-from Main.api.api_result_constants import *
+from Main.api.api_constants import *
 
 class Rig():
-    def __init__(self, id, name, devices_count, max_rejected_ratio, error_threshold, algorithm="DAGGERHASHIMOTO"):
+    def __init__(self, id, name, devices_count, max_rejected_ratio, error_threshold, solution_map, algorithm="DAGGERHASHIMOTO"):
         self.id = id
         self.name = name
         self.devices_count = devices_count
         self.max_rejected_ratio = max_rejected_ratio
+        self.solution_map = solution_map
         self.devices = {}
         self.algorithm = algorithm
         self.status = Status.ACTIVE
@@ -22,6 +23,7 @@ class Rig():
         self.error_count = 0
         self.total_error_count = 0
         self.problem = None
+        self.solution = None
         self.operation_status = Normal()
         self.solutions = None
         self.reset_values()
@@ -54,9 +56,13 @@ class Rig():
         if(not self.status.value):
             self.reset_values()
             return False
-        if (actual_info[UNPAID_AMOUNT]<self.unpaid_amount):
-            Reporter.instance().pay(self.name,self.unpaid_amount)
-        self.unpaid_amount = actual_info[UNPAID_AMOUNT]
+        if (UNPAID_AMOUNT in actual_info):
+            if (actual_info[UNPAID_AMOUNT]<self.unpaid_amount):
+                Reporter.instance().pay(self.name,self.unpaid_amount)
+            self.unpaid_amount = actual_info[UNPAID_AMOUNT]
+        if (DAILY_REVENUE in actual_info):
+            self.daily_revenue = actual_info[DAILY_REVENUE]
+            Reporter.instance().set_daily_revenue(self.name,self.daily_revenue)
         for id, device_actual_info in actual_info[DEVICES].items():
             if (id not in self.devices):
                 self.devices[id] = Device(id, device_actual_info[NAME], self)
@@ -86,22 +92,31 @@ class Rig():
             self.error_count = 0
             self.problem = None
             self.solutions = None
+            self.solution = None
 
         if (self.error_count > self.error_threshold and not self.operation_status.should_wait()):
             self.problem = sorted(errors, key=lambda x: x.severity(), reverse=True)[0]
             Reporter.instance().add_problem(self.name,self.problem)
             self.operation_status = Error()
-            self.solutions = self.problem.solutions()
+            self.solutions = self.getSolutions()
 
         self.operation_status.update()
         return errors
 
+    def getSolutions(self):
+        for problem in self.solution_map.keys():
+            if (self.problem.match(problem)):
+                return self.solution_map[problem].copy()
+        if ("default" in self.solution_map):
+            return self.solution_map["default"].copy()
+        return self.problem.solutions()
+
     def solve_errors(self, api, email_sender, logger):
         if (self.problem != None and not self.operation_status.should_wait()):
-            solution = self.solutions.pop(0)
-            Reporter.instance().add_solution(self.name, solution)
-            solution.solve(api, self.id, self.name, email_sender, self.problem, logger)
-            self.operation_status = solution.next_status()
+            self.solution = self.solutions.pop(0)
+            Reporter.instance().add_solution(self.name, self.solution)
+            self.solution.solve(api, self.id, self.name, email_sender, self.problem, logger)
+            self.operation_status = self.solution.next_status()
         if(self.problem == None and self.operation_status.is_down()):
             email_sender.send_email(email_content='rig:{} NORMALIZED'.format(self.name), email_subject='Issue CLOSED Rig {}'.format(self.name))
         if(self.problem == None and not self.operation_status.is_ok()):    

@@ -58,6 +58,9 @@ class Reporter():
     def pay(self, rig_name, amount):
         self.exec_collectors(self.collectors, "pay", [rig_name, amount])
 
+    def set_daily_revenue(self, rig_name, amount):
+        self.exec_collectors(self.collectors, "set_daily_revenue", [rig_name, amount])
+
     def add_errors(self, rig_name, errors):
         self.exec_collectors(self.collectors, "add_errors", [rig_name, errors])
 

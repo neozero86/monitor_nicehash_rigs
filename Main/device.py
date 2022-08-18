@@ -10,7 +10,7 @@ from Main.problem.no_vram import NoVram
 from Main.problem.unrecognized_device import UnrecognizedDevice
 from Main.problem.wrong_status import WrongStatus
 from Main.status import Status
-from Main.api.api_result_constants import *
+from Main.api.api_constants import *
 
 class Device():
     def __init__(self, id, name, rig, status=Status.ACTIVE):
@@ -35,9 +35,12 @@ class Device():
         self.power = actual_info[POWER]
         self.hr = actual_info[HR]
         self.fan_speed = actual_info[FAN_SPEED]
-        self.temp_encoded = actual_info[TEMP_ENCODED]
+        if (TEMP_ENCODED in actual_info):
+            self.temp_encoded = actual_info[TEMP_ENCODED]
+        else:
+            self.temp_encoded = 0
         self.core_temp = actual_info[CORE_TEMP]
-        self.hot_spot_temp = actual_info[HOT_SPOT_TEMP]
+        #self.hot_spot_temp = actual_info[HOT_SPOT_TEMP]
         self.vram_temp = actual_info[VRAM_TEMP]
 
     def reset_values(self):
@@ -46,7 +49,7 @@ class Device():
         self.fan_speed = 0
         self.temp_encoded = 0
         self.core_temp = 0
-        self.hot_spot_temp = 0
+        #self.hot_spot_temp = 0
         self.vram_temp = 0
 
     def check(self):
@@ -57,10 +60,11 @@ class Device():
         if(not self.status.value):
             errors.append(WrongStatus(self.rig.name, self.name, self.id, self.status.name))
             return errors
-        if(self.vram_temp==-1):
-            errors.append(NoVram(self.rig.name, self.name, self.id))
-        elif(self.vram_temp>self.thresholds.max_vram_temp):
-            errors.append(HighVRamTemp(self.rig.name, self.name, self.id, self.vram_temp, self.thresholds.max_vram_temp))
+        if hasattr(self.thresholds, 'max_vram_temp'):
+            if(self.vram_temp==-1):
+                errors.append(NoVram(self.rig.name, self.name, self.id))
+            elif(self.vram_temp>self.thresholds.max_vram_temp):
+                errors.append(HighVRamTemp(self.rig.name, self.name, self.id, self.vram_temp, self.thresholds.max_vram_temp))
         if(self.power>self.thresholds.max_power):
             errors.append(HighPower(self.rig.name, self.name, self.id, "power", self.power, self.thresholds.max_power))
         if(self.temp_encoded<0):

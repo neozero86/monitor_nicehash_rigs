@@ -4,49 +4,44 @@
   "error_threshold": 3,
   "rigs": [
     {
-      "id": "id_ok",
       "name": "name_ok",
       "devices": 3
     },
     {
-      "id": "id_empty",
       "name": "name_empty",
       "devices": 3
     },
     {
-      "id": "id_not_active",
       "name": "name_not_active",
       "devices": 3
     },
     {
-      "id": "id_accepted_speed_0",
       "name": "name_accepted_speed_0",
       "devices": 3
     },
     {
-      "id": "id_rejected_ratio_high",
       "name": "name_rejected_ratio_high",
       "devices": 3
     },
     {
-      "id": "id_invalid_profile",
       "name": "name_invalid_profile",
       "devices": 1
     },
     {
-      "id": "id_low_hash_rate_id_2",
       "name": "name_low_hash_rate_id_2",
       "devices": 3
     },
     {
-      "id": "id_power_high",
       "name": "name_power_high",
       "devices": 2
     },
     {
-      "id": "id_fan_speed_low",
       "name": "name_fan_speed_low",
       "devices": 1
+    },
+    {
+      "name": "name_high_core_temp",
+      "devices": 3
     }
   ],
   "devices":{
@@ -71,5 +66,10 @@
       "min_hr":43.0,
       "min_fan_speed":10.0
     }
+  },
+  "error_management": {
+    "HighCoreTemp": ["StopWorker","Human"],
+    "HighVRamTemp": ["StopWorker","Human"],
+    "default": ["RestartWorker","RestartRig","StartWorker","Human"]
   }
 }

@@ -52,5 +52,10 @@
     "gmail_password": "API_GENERATED_PASS",
     "notification_email": ["RECIEVER_USER_NAME@gmail.com"],
     "email_subject": "[URGENT] NICEHASH"
+  },
+  "error_management": {
+    "HighCoreTemp": ["RestartWorker","StopWorker","Human"],
+    "HighVRamTemp": ["RestartWorker","StopWorker","Human"],
+    "default": ["RestartWorker","RestartRig","StartWorker","Human"]
   }
 }

@@ -9,7 +9,8 @@ class GeneralStatus():
         self.status[rig.name] = {
             "status": rig.status,
             "problem": rig.problem,
-            "solutions": rig.solutions
+            "current_solution": rig.solution,
+            "future_solutions": rig.solutions            
         }
         try:
             with open("Main/static/dashboard.html", "w") as text_file:
@@ -20,5 +21,9 @@ class GeneralStatus():
     def html_status(self):
         html = ""
         for rig in self.status:
-            html += "<div class='rig'><div class='rig-name'>{}</div><div class='rig-status'>{}</div><div class='rig-problem'>{}</div><div class='rig-solutions'>{}</div></div>".format(rig, self.status[rig]["status"], self.status[rig]["problem"], self.status[rig]["solutions"])
+            html += "<div class='rig'><div class='rig-name'>{}</div><div class='status'>{}</div>".format(rig, self.status[rig]["status"])
+            html += "<div class='problem'>{}</div>".format(self.status[rig]["problem"])
+            html += "<div class='appying solution'>{}</div>".format(self.status[rig]["current_solution"])
+            html += "<div class='next solutions'>{}</div>".format(self.status[rig]["future_solutions"])
+            html += "</div>"
         return html

@@ -8,7 +8,8 @@ class Collector():
             PROBLEMS: {},
             APPLIED_SOLUTIONS: {},
             INTERACTION_ERRORS: {},
-            PAID_AMOUNTS: {}
+            PAID_AMOUNTS: {},
+            REVENUES: {}
         }
     
     def errors(self):
@@ -25,9 +26,24 @@ class Collector():
 
     def paid_amounts(self):
         return self.collections[PAID_AMOUNTS]
+    
+    def revenues(self):
+        return self.collections[REVENUES]
 
     def pay(self, rig_name, amount):
         self.increment_collection(rig_name, self.collections[PAID_AMOUNTS], amount)
+
+    def set_daily_revenue(self, rig_name, revenue):
+        collection = self.collections[REVENUES]
+        if rig_name not in collection:
+            collection[rig_name] = {
+                REVENUES_COUNT: 0,
+                REVENUES_SUM: 0,
+                REVENUES_AVG: 0
+            }
+        collection[rig_name][REVENUES_SUM] += revenue
+        collection[rig_name][REVENUES_COUNT] += 1
+        collection[rig_name][REVENUES_AVG] = collection[rig_name][REVENUES_SUM] / collection[rig_name][REVENUES_COUNT]
 
     def add_error(self, rig_name, error):
         self.add_to_collection(rig_name, error.pretty_print(), self.collections[ERRORS])
@@ -70,4 +86,8 @@ class Collector():
         with open(file_name, 'r') as f:
             collector = Collector()
             collector.collections = json.load(f)
+            if (REVENUES not in collector.collections):
+                collector.collections[REVENUES] = {}
+            if (PAID_AMOUNTS not in collector.collections):
+                collector.collections[PAID_AMOUNTS] = {}
             return collector
