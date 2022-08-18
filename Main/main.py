@@ -22,8 +22,7 @@ def main():
         raise Exception("Invalid API")
     email_sender = MailSender(conf.mail.gmail_username,
                                     conf.mail.gmail_password,
-                                    conf.mail.notification_email,
-                                    conf.mail.email_subject)
+                                    conf.mail.notification_email)
     Reporter.instance().init(email_sender, {"interval_seconds":60, "production": True}, logger)
     monitor = Monitor(logger, api_adapter, email_sender, rigs, devices,
     conf.error_threshold, conf.max_rejected_ratio, solution_map, conf.polling_interval_sec)
