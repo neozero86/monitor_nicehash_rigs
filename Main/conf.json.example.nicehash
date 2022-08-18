@@ -1,4 +1,5 @@
 {
+  "api": "nicehash",
   "polling_interval_sec": 60, 
   "max_rejected_ratio": 0.1,
   "error_threshold": 3,
@@ -21,12 +22,7 @@
       "name": "NAME_RIG_3",
       "devices": 3
     }
-  ]
-  
-  "rigs": {
-    "r_NOMBRE_RIG_1": "ID_RIG_1",
-    "r_NOMBRE_RIG_2": "ID_RIG_2"
-  },
+  ],  
   "devices":{
     "d_3090": {
       "max_power":350.0,
@@ -50,8 +46,7 @@
   "mail": {
     "gmail_username": "USERNAME",
     "gmail_password": "API_GENERATED_PASS",
-    "notification_email": ["RECIEVER_USER_NAME@gmail.com"],
-    "email_subject": "[URGENT] NICEHASH"
+    "notification_email": ["RECIEVER_USER_NAME@gmail.com"]
   },
   "error_management": {
     "HighCoreTemp": ["RestartWorker","StopWorker","Human"],

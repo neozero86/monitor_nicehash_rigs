@@ -1,0 +1,55 @@
+{
+  "api": "minerstat",
+  "access_key":"ACCESS_KEY",
+  "api_token":"API_TOKEN",
+  "polling_interval_sec": 60, 
+  "max_rejected_ratio": 0.1,
+  "error_threshold": 3,
+  "rigs": [
+    {
+      "id": "ID_RIG_1",
+      "name": "NAME_RIG_1",
+      "devices": AMOUNT_OF_DEVICES_IN_RIG
+    },
+    {
+      "id": "ID_RIG_2",
+      "name": "NAME_RIG_2",
+      "devices": 2
+    },
+    {
+      "id": "ID_RIG_3",
+      "name": "NAME_RIG_3",
+      "devices": 3
+    }
+  ],
+  "devices":{
+    "d_3090": {
+      "max_power":350.0,
+      "max_tem":68.0,
+      "min_hr":107.0,
+      "min_fan_speed":10.0
+    },
+    "d_3060_Ti": {
+      "max_power":160.0,
+      "max_tem":68.0,
+      "min_hr":54.0,
+      "min_fan_speed":10.0
+    },
+    "d_3060": {
+      "max_power":130.0,
+      "max_tem":68.0,
+      "min_hr":43.0,
+      "min_fan_speed":10.0
+    }
+  },
+  "mail": {
+    "gmail_username": "USERNAME",
+    "gmail_password": "API_GENERATED_PASS",
+    "notification_email": ["RECIEVER_USER_NAME@gmail.com"]
+  },
+  "error_management": {
+    "HighCoreTemp": ["RestartWorker","StopWorker","Human"],
+    "HighVRamTemp": ["RestartWorker","StopWorker","Human"],
+    "default": ["RestartWorker","RestartRig","StartWorker","Human"]
+  }
+}

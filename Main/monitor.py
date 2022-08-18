@@ -33,7 +33,7 @@ class Monitor():
                 except Exception as e:
                     error = ScriptError(rig.name, e)
                     errors.append(error)
-                    self.email_sender.send_email(email_content=str(error))
+                    self.email_sender.send_email(email_content=str(error),email_subject="Script Error")
 
             self.logger.debug('')
             self.logger.debug('')

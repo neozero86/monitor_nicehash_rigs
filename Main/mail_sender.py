@@ -8,7 +8,7 @@ SMTP_SERVER = "smtp.gmail.com"
 PORT = 587
 
 class MailSender:
-    def __init__(self, gmail_user, gmail_password, target_email, email_subject):
+    def __init__(self, gmail_user, gmail_password, target_email, email_subject="Error in rig monitor, please check"):
         self.gmail_user = gmail_user
         self.gmail_password = gmail_password
         self.target_email = target_email

@@ -52,6 +52,11 @@
       "id": "id_high_core_temp",
       "name": "name_high_core_temp",
       "devices": 3
+    },
+    {
+      "id": "id_high_vram_temp",
+      "name": "name_high_vram_temp",
+      "devices": 1
     }
   ],
   "devices":{
