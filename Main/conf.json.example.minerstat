@@ -7,17 +7,14 @@
   "error_threshold": 3,
   "rigs": [
     {
-      "id": "ID_RIG_1",
       "name": "NAME_RIG_1",
       "devices": AMOUNT_OF_DEVICES_IN_RIG
     },
     {
-      "id": "ID_RIG_2",
       "name": "NAME_RIG_2",
       "devices": 2
     },
     {
-      "id": "ID_RIG_3",
       "name": "NAME_RIG_3",
       "devices": 3
     }
