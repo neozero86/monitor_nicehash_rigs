@@ -142,7 +142,10 @@ class Reporter():
         return data
 
     def report_from_collector(self, collector, frequency):
-        return self.build_report(collector.paid_amounts(), collector.problems(), collector.applied_solutions(), collector.interaction_errors(), collector.errors(), frequency)
+        profitability = collector.paid_amounts()
+        if not profitability:
+            profitability = collector.revenues_avg()
+        return self.build_report(profitability, collector.problems(), collector.applied_solutions(), collector.interaction_errors(), collector.errors(), frequency)
 
     def build_report(self, paid_amounts, problems, applied_solutions, interaction_errors, errors, frequency):
         report = ""
