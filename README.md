@@ -44,6 +44,13 @@ Minerstat Access Key: the key to access to Minerstat dashboard
 Private API https://api.minerstat.com/docs-private
 Public API https://api.minerstat.com/docs-public
 
+## Screenshots
+![image](https://user-images.githubusercontent.com/3521741/185759335-679d6b3e-6d18-40f1-8484-b31d28f9f3e0.png)
+![image](https://user-images.githubusercontent.com/3521741/185759398-19376004-8bcb-4dbf-8316-13624abdea36.png)
+![image](https://user-images.githubusercontent.com/3521741/185759411-b2cce75b-4b25-4490-b135-adeeabf16e9b.png)
+![image](https://user-images.githubusercontent.com/3521741/185759418-dbec0fcd-2dc6-4200-a7ee-1554d3eba946.png)
+![image](https://user-images.githubusercontent.com/3521741/185759437-dcdcd17a-fc65-40ab-814d-1c811328aa12.png)
+
 ## Contact me
 if you have any doubt or comment send an email to matiasegea@gmail.com
 
