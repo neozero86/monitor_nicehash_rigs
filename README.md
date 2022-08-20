@@ -1,12 +1,12 @@
 # Rigs monitor
 ## Description
-Python monitor to check status and solve problems of your rigs. Currently working with Nicehash and Minerstat.
+Python monitor to check the status of your rigs and solves multiple problems. Currently works with Nicehash and Minerstat.
 You can set the solutions that you want for a specific problem:
-Example: if vram is high, restart the mining program. If it doesn't work, restart the rig. If it doesn't work open an issue to send an email to a Human.
-The main idea is avoid the human intervention if possible
+Example: if vram is high, restarts the mining program. If that doesn't work, the rig is restarted. If it still doesn't work an issue is opened and an email is sent to a Human.
+The main idea is to avoid human intervention if possible
 
 ## Prerequisites:
-Python 3.10 (I didn't test it with previous versions, but it could work)
+Python 3.10 (I didn't test it with previous versions, but it may work)
 
 ## Instalation
 1) Clone the repo
@@ -14,9 +14,9 @@ Python 3.10 (I didn't test it with previous versions, but it could work)
 3) Edit that file with your settings 
 4) run "sudo bash ./run.sh"
 
-Alternatively you could run "nohup sudo bash ./run.sh &" to detach the process of the terminal (Useful if you run it in some cloud server)
+Alternatively you could run "nohup sudo bash ./run.sh &" to detach the process of the terminal (Useful if you run it in a cloud server)
 
-In the conf.json you need to complete the data of your rigs, your access keys and user and "API pass" of Gmail. Don't share your conf.json.
+In the conf.json you need to complete the data of your rigs, your access keys and user, and "API pass" of Gmail. Don't share your conf.json.
 More details in the documentation section
 
 The run.sh installs the requirements, add the script folder to PYTHONPATH, run python3 Main/server.py and run python3 Main/main.py
