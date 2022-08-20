@@ -1,6 +1,9 @@
 # Rigs monitor
 ## Description
-Python monitor to check status of rigs. Currently working with Nicehash and Minerstat.
+Python monitor to check status and solve problems of your rigs. Currently working with Nicehash and Minerstat.
+You can set the solutions that you want for a specific problem:
+Example: if vram is high, restart the mining program. If it doesn't work, restart the rig. If it doesn't work open an issue to send an email to a Human.
+The main idea is avoid the human intervention if possible
 
 ## Prerequisites:
 Python 3.10 (I didn't test it with previous versions, but it could work)
