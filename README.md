@@ -21,13 +21,13 @@ More details in the documentation section
 
 The run.sh installs the requirements, add the script folder to PYTHONPATH, run python3 Main/server.py and run python3 Main/main.py
 The Main/server.py use your port 80 to expose some useful endpoints:
-localhost/ = dashboard (current status of your rigs)
-localhost/log = tail of the log, it updates automatically, just need to keep the windows open
-localhost/full = resume of everything that happened to your rigs. (Screenshots below)
-localhost/daily = daily resume
-localhost/weekly = weekly resume
-localhost/monthly = monthly resume
-localhost/yearly = yearly resume
+- localhost/ = dashboard (current status of your rigs)
+- localhost/log = tail of the log, it updates automatically, just need to keep the windows open
+- localhost/full = resume of everything that happened to your rigs. (Screenshots below)
+- localhost/daily = daily resume
+- localhost/weekly = weekly resume
+- localhost/monthly = monthly resume
+- localhost/yearly = yearly resume
 
 
 ## Documentación
