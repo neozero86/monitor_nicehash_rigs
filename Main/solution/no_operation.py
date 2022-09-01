@@ -1,7 +1,7 @@
 from Main.solution.solution import Solution
 from Main.operational_status.wait import Wait
 
-class NOp(Solution):
+class NoOperation(Solution):
 
     def __init__(self, cicles_to_wait= 5):
         super(Solution, self).__init__()
