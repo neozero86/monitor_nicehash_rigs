@@ -1,4 +1,5 @@
 from Main.singleton import Singleton
+import json
 
 @Singleton
 class GeneralStatus():
@@ -20,6 +21,8 @@ class GeneralStatus():
             try:
                 with open("Main/static/dashboard.html", "w") as text_file:
                     text_file.write(self.html_status())
+                with open("db/dashboard.json", "w") as text_file:
+                    text_file.write(json.dumps(self.status, default=str))
             except Exception as e:
                 print(e)
 
