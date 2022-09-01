@@ -48,5 +48,10 @@
     "HighCoreTemp": ["RestartWorker","StopWorker","Human"],
     "HighVRamTemp": ["RestartWorker","StopWorker","Human"],
     "default": ["RestartWorker","RestartRig","StartWorker","Human"]
+  },
+  "delay_time": {
+    "RestartWorker": 5,
+    "RestartRig": 10,
+    "StartWorker": 5
   }
 }
